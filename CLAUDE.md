@@ -1,23 +1,22 @@
-# Noble Reach — Pre-Redesign SEO Benchmark
+# Noble Reach — Pre-Redesign Audit
 
 ## Project
 
-SEO baseline audit for **noblereach.org** before a full website redesign and rebuild. The goal is to document everything that must be preserved, redirected, or fixed during the rebuild.
+Pre-redesign audit for **noblereach.org**. The goal is to document everything that must be preserved, redirected, or fixed during the rebuild.
 
 ## Current State
 
-- Baseline data (keywords, backlinks, AI mentions) has been collected and is in `data/baseline-data.md`
-- Handoff instructions for completing the remaining work are in `HANDOFF.md`
-- Three reports need to be produced in `reports/`
-- A technical audit (on-page, Lighthouse) has NOT been run yet
+- SEO audit is complete — data and reports are in `seo-audit/`
+- WordPress audit: planned
+- Accessibility audit: planned
 
 ## Key Facts About the Target Site
 
 - Domain: noblereach.org (previously noblereachfoundation.org — redirects are load-bearing)
-- Hosted on Cloudflare
+- Hosted on Cloudflare, running WordPress
 - Person pages (`/person/`) are the primary traffic drivers
 - 113 backlinks from .edu domains — highest-value links, mostly to Scholars and Emerge program pages
-- 195 ranked keywords, ~1,685 monthly organic visits
+- 270 ranked keywords, ~1,685 monthly organic visits
 - Site appears in Google AI Overviews for several queries
 
 ## Tools Available
@@ -30,7 +29,7 @@ SEO baseline audit for **noblereach.org** before a full website redesign and reb
 
 ## Conventions
 
-- Save raw/structured data to `data/`
-- Save final reports to `reports/`
+- Each audit type lives in its own subdirectory: `seo-audit/`, `wordpress-audit/`, `accessibility-audit/`, etc.
+- Within each audit: raw/structured data goes in `<audit>/data/`, final reports go in `<audit>/reports/`
 - Use markdown tables for all data presentation
 - Reports should be factual and actionable — the audience is a dev team doing a site rebuild

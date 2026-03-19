@@ -1,73 +1,38 @@
 # Noble Reach — Pre-Redesign SEO Benchmark
 
-Tooling setup for generating a comprehensive SEO baseline before a full website redesign and rebuild.
+SEO baseline audit for **noblereach.org** before a full website redesign and rebuild.
 
 ## Purpose
 
-Capture the current state of the website so we can:
+Capture the current state of the website so the dev team can:
 - **Preserve strengths** — rankings, backlinks, SERP features, content that drives traffic
 - **Identify weaknesses** — technical issues, content gaps, missed structured data opportunities
 - **Build a risk register** — URL redirect map, backlinked pages, and anything that could break during the rebuild
 
-## Tools
+## Data
 
-### 1. DataForSEO MCP Server
+Raw and structured data collected during the audit:
 
-Provides real SERP data, keyword volumes, backlink profiles, and competitive intelligence via pay-as-you-go API.
+| File | Contents |
+|---|---|
+| `data/baseline-data.md` | Domain rank overview, top keywords, backlink summary, AI mention data |
+| `data/technical-audit.md` | On-page audit results (9 pages) and Lighthouse scores |
+| `data/full-keyword-inventory.md` | All 270 ranked keywords sorted by search volume |
+| `data/top10-keywords.md` | 88 keywords ranking in positions 1–10 (highest redesign risk) |
+| `data/pages-and-broken-links.md` | All pages with backlinks, 404 pages, and existing redirect chains |
 
-**Setup:**
-```bash
-claude mcp add dfs-mcp \
-  --env DATAFORSEO_USERNAME=<username> \
-  --env DATAFORSEO_PASSWORD=<password> \
-  -- npx -y dataforseo-mcp-server
-```
+## Reports
 
-**What we use it for:**
-- Keyword ranking inventory (every keyword the site ranks for)
-- Backlink profile snapshot (referring domains, anchor text, target pages)
-- Competitor keyword gap analysis
-- SERP feature ownership (featured snippets, knowledge panels, etc.)
-- AI search mention tracking (ChatGPT, Claude, Perplexity visibility)
+| Report | File | Description |
+|---|---|---|
+| 1 — Technical Baseline | `reports/01-technical-baseline.md` | Lighthouse scores, on-page SEO issues, structured data gaps, broken pages, infrastructure |
+| 2 — Strategic Baseline | `reports/02-strategic-baseline.md` | Keyword rankings, traffic-driving pages, backlink profile, AI Overview presence |
+| 3 — Redesign Risk Register | `reports/03-redesign-risk-register.md` | URL redirect map, content to preserve, schema plan, broken page fixes, technical debt |
 
-**Pricing:** $50 minimum deposit, pay-as-you-go. A full domain audit typically runs $1-5. Credits never expire.
+## Key Facts
 
-### 2. claude-seo Skill
-
-The [AgriciDaniel/claude-seo](https://github.com/AgriciDaniel/claude-seo) skill handles technical SEO auditing with script-backed evidence collection.
-
-**Setup:**
-```bash
-claude skill add --url https://github.com/AgriciDaniel/claude-seo
-```
-
-**What we use it for:**
-- Core Web Vitals (LCP, INP, CLS via PageSpeed Insights API)
-- Schema/structured data inventory and validation
-- Security headers audit
-- Broken link detection
-- Internal link structure analysis
-- robots.txt and sitemap validation
-- AI crawler access auditing (GPTBot, ClaudeBot, etc.)
-- E-E-A-T assessment
-
-### 3. Google Search Console (optional but recommended)
-
-Ground truth for impressions, clicks, and indexed pages. The claude-seo skill includes a GSC integration script if credentials are available.
-
-## Benchmark Reports
-
-### Report 1: Technical Baseline
-Core Web Vitals scores, schema inventory, security headers, crawl health, internal link structure, broken links, mobile readiness.
-
-### Report 2: Strategic Baseline
-Current keyword rankings, traffic-driving pages (top 50), backlink profile, referring domain count, competitor keyword gaps, SERP feature ownership.
-
-### Report 3: Redesign Risk Register
-The most critical deliverable — a checklist for the dev team:
-- **URL redirect map** — every ranked/backlinked URL that must redirect in the new site
-- **Backlinked pages** — pages with external links that must persist or redirect
-- **SERP features at risk** — featured snippets, rich results that depend on current markup
-- **Content to preserve** — pages driving organic traffic that must carry over
-- **Schema to maintain** — structured data currently earning rich results
-- **Internal link equity** — high-authority pages and their link relationships
+- **Domain:** noblereach.org (previously noblereachfoundation.org — redirects are load-bearing)
+- **Platform:** WordPress on Cloudflare
+- **Ranked keywords:** 270 | **Estimated monthly organic visits:** ~1,685
+- **Referring domains:** 294 (113 from .edu — highest-value links)
+- **Audit date:** 2026-03-19

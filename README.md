@@ -8,6 +8,25 @@ Pre-redesign audits for Outright clients. Each client lives in `clients/<slug>/`
 |---|---|---|
 | noble-reach | https://noblereach.org | SEO ✓ · WordPress ✓ · Accessibility ✓ |
 
+## Audit Dependencies
+
+Each audit type requires different tools to be configured in Claude Code.
+
+### SEO Audit
+- **DataForSEO MCP** (`dfs-mcp`) — provides SERP data, keyword rankings, backlink analysis, Lighthouse, on-page audits, and AI mention data
+- Configure via the DataForSEO MCP server in Claude Code settings with your API credentials
+
+### WordPress Audit
+- **Local site copy** — a filesystem copy of the WordPress installation (WPEngine local, Local by Flywheel, or similar). Path goes in the client's `CLAUDE.md`.
+- No external API credentials required — the audit is filesystem-only (read-only)
+
+### Accessibility Audit
+- **Playwright MCP** — browser automation for live page testing, screenshots, keyboard navigation, and accessibility tree inspection
+- Install: add the Playwright MCP server to Claude Code settings
+- **Local site copy** (optional) — for the code-level pass; audit proceeds with live site only if unavailable
+
+---
+
 ## Adding a New Client
 
 ```bash

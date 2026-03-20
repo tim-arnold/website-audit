@@ -1,8 +1,8 @@
-# {{CLIENT_DISPLAY_NAME}} — Pre-Redesign Audit
+# {{CLIENT_DISPLAY_NAME}} — {{AUDIT_PURPOSE_LABEL}} Audit
 
 ## Project
 
-Pre-redesign audit for **{{PUBLIC_URL}}**. The goal is to document everything that must be preserved, redirected, or fixed during the rebuild.
+{{AUDIT_GOAL}}
 
 ## Client
 
@@ -16,7 +16,7 @@ Pre-redesign audit for **{{PUBLIC_URL}}**. The goal is to document everything th
 ## Audit Status
 
 - SEO audit: planned
-- WordPress audit: planned
+- Technology audit: planned
 - Accessibility audit: planned
 
 ## Tools Available

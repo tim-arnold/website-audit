@@ -78,6 +78,23 @@ echo ""
 PUBLIC_URL=$(prompt "Public URL" "https://")
 PREVIOUS_DOMAIN=$(prompt_optional "Previous/old domain")
 
+# ── audit purpose ────────────────────────────────────────────────────────────────
+
+echo ""
+echo "Audit purpose:"
+echo "  1) Pre-redesign  — establish baseline before a rebuild or migration"
+echo "  2) Remediation   — identify and fix issues on the existing site (no rebuild)"
+echo ""
+read -rp "  Choose [1-2]: " purpose_choice
+case "${purpose_choice:-1}" in
+  1) AUDIT_PURPOSE="preredesign"; AUDIT_PURPOSE_LABEL="Pre-Redesign"
+     AUDIT_GOAL="Pre-redesign audit for **{{PUBLIC_URL}}**. The goal is to document everything that must be preserved, redirected, or fixed during the rebuild." ;;
+  2) AUDIT_PURPOSE="remediation"; AUDIT_PURPOSE_LABEL="Remediation"
+     AUDIT_GOAL="Remediation audit for **{{PUBLIC_URL}}**. The goal is to identify and prioritize issues to fix on the existing site — no rebuild is planned." ;;
+  *) AUDIT_PURPOSE="preredesign"; AUDIT_PURPOSE_LABEL="Pre-Redesign"
+     AUDIT_GOAL="Pre-redesign audit for **{{PUBLIC_URL}}**. The goal is to document everything that must be preserved, redirected, or fixed during the rebuild." ;;
+esac
+
 # ── audit selection ─────────────────────────────────────────────────────────────
 
 echo ""
@@ -192,6 +209,7 @@ echo "Creating client:"
 echo "  Name:            $CLIENT_NAME"
 echo "  Slug:            $SLUG"
 echo "  Directory:       clients/$SLUG/"
+echo "  Audit purpose:   $AUDIT_PURPOSE_LABEL"
 echo "  Public URL:      $PUBLIC_URL"
 echo "  Previous domain: $PREVIOUS_DOMAIN"
 [[ "$INCLUDE_TECH" == true ]] && echo "  CMS:             $CMS"
@@ -214,21 +232,37 @@ fi
 mkdir -p "$CLIENT_DIR"
 cp "$TEMPLATE_DIR/CLAUDE.md" "$CLIENT_DIR/CLAUDE.md"
 
-[[ "$INCLUDE_SEO"  == true ]] && cp -r "$TEMPLATE_DIR/seo-audit"           "$CLIENT_DIR/seo-audit"
-[[ "$INCLUDE_TECH" == true ]] && cp -r "$TEMPLATE_DIR/technology-audit"    "$CLIENT_DIR/technology-audit"
-[[ "$INCLUDE_A11Y" == true ]] && cp -r "$TEMPLATE_DIR/accessibility-audit" "$CLIENT_DIR/accessibility-audit"
+if [[ "$INCLUDE_SEO" == true ]]; then
+  cp -r "$TEMPLATE_DIR/seo-audit" "$CLIENT_DIR/seo-audit"
+  rm -f "$CLIENT_DIR/seo-audit/HANDOFF-"*.md
+  cp "$TEMPLATE_DIR/seo-audit/HANDOFF-${AUDIT_PURPOSE}.md" "$CLIENT_DIR/seo-audit/HANDOFF.md"
+fi
+if [[ "$INCLUDE_TECH" == true ]]; then
+  cp -r "$TEMPLATE_DIR/technology-audit" "$CLIENT_DIR/technology-audit"
+  rm -f "$CLIENT_DIR/technology-audit/HANDOFF-"*.md
+  cp "$TEMPLATE_DIR/technology-audit/HANDOFF-${AUDIT_PURPOSE}.md" "$CLIENT_DIR/technology-audit/HANDOFF.md"
+fi
+if [[ "$INCLUDE_A11Y" == true ]]; then
+  cp -r "$TEMPLATE_DIR/accessibility-audit" "$CLIENT_DIR/accessibility-audit"
+  rm -f "$CLIENT_DIR/accessibility-audit/HANDOFF-"*.md
+  cp "$TEMPLATE_DIR/accessibility-audit/HANDOFF-${AUDIT_PURPOSE}.md" "$CLIENT_DIR/accessibility-audit/HANDOFF.md"
+fi
 
 # ── fill placeholders in CLAUDE.md ─────────────────────────────────────────────
 
 CLAUDE_FILE="$CLIENT_DIR/CLAUDE.md"
 
-replace_in_file "$CLAUDE_FILE" "{{CLIENT_DISPLAY_NAME}}" "$CLIENT_NAME"
-replace_in_file "$CLAUDE_FILE" "{{CLIENT_SLUG}}"         "$SLUG"
-replace_in_file "$CLAUDE_FILE" "{{PUBLIC_URL}}"          "$PUBLIC_URL"
-replace_in_file "$CLAUDE_FILE" "{{PREVIOUS_DOMAIN}}"     "$PREVIOUS_DOMAIN"
-replace_in_file "$CLAUDE_FILE" "{{CMS}}"                 "$CMS"
-replace_in_file "$CLAUDE_FILE" "{{HOSTING}}"             "$HOSTING"
-replace_in_file "$CLAUDE_FILE" "{{LOCAL_SITE_PATH}}"     "$LOCAL_SITE_PATH"
+# Replace composite placeholders first (they embed other placeholders)
+replace_in_file "$CLAUDE_FILE" "{{AUDIT_PURPOSE_LABEL}}"  "$AUDIT_PURPOSE_LABEL"
+replace_in_file "$CLAUDE_FILE" "{{AUDIT_GOAL}}"           "$AUDIT_GOAL"
+# Then replace individual placeholders
+replace_in_file "$CLAUDE_FILE" "{{CLIENT_DISPLAY_NAME}}"  "$CLIENT_NAME"
+replace_in_file "$CLAUDE_FILE" "{{CLIENT_SLUG}}"          "$SLUG"
+replace_in_file "$CLAUDE_FILE" "{{PUBLIC_URL}}"           "$PUBLIC_URL"
+replace_in_file "$CLAUDE_FILE" "{{PREVIOUS_DOMAIN}}"      "$PREVIOUS_DOMAIN"
+replace_in_file "$CLAUDE_FILE" "{{CMS}}"                  "$CMS"
+replace_in_file "$CLAUDE_FILE" "{{HOSTING}}"              "$HOSTING"
+replace_in_file "$CLAUDE_FILE" "{{LOCAL_SITE_PATH}}"      "$LOCAL_SITE_PATH"
 
 # ── annotate technology HANDOFF ────────────────────────────────────────────────
 

@@ -1,8 +1,8 @@
-# Outright — Pre-Redesign Audit
+# Outright — Remediation Audit
 
 ## Project
 
-Pre-redesign audit for **https://weareoutright.com**. The goal is to document everything that must be preserved, redirected, or fixed during the rebuild.
+Remediation audit for **https://weareoutright.com**. The goal is to identify and prioritize issues to fix on the existing site — no rebuild is planned.
 
 ## Client
 
@@ -16,7 +16,7 @@ Pre-redesign audit for **https://weareoutright.com**. The goal is to document ev
 ## Audit Status
 
 - SEO audit: planned
-- WordPress audit: planned
+- Technology audit: planned
 - Accessibility audit: planned
 
 ## Tools Available

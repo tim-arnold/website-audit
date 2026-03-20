@@ -1,46 +1,69 @@
-# Noble Reach — Pre-Redesign Audit
+# Site Audit Framework
 
-Baseline audits for **noblereach.org** before a full website redesign and rebuild.
+Pre-redesign audits for Outright clients. Each client lives in `clients/<slug>/`.
 
-## Purpose
+## Clients
 
-Capture the current state of the website so the dev team can:
-- **Preserve strengths** — rankings, backlinks, SERP features, content that drives traffic
-- **Identify weaknesses** — technical issues, content gaps, missed structured data opportunities
-- **Build a risk register** — URL redirect map, backlinked pages, and anything that could break during the rebuild
-
-## Audits
-
-| Directory | Status | Description |
+| Client | URL | Status |
 |---|---|---|
-| `seo-audit/` | ✅ Complete | Keyword rankings, backlinks, AI mentions, on-page audit, Lighthouse, risk register |
-| `wordpress-audit/` | Planned | WordPress-specific technical audit |
-| `accessibility-audit/` | Planned | Accessibility audit |
+| noble-reach | https://noblereach.org | SEO ✓ · WordPress ✓ · Accessibility ✓ |
 
-## Key Facts
+## Adding a New Client
 
-- **Domain:** noblereach.org (previously noblereachfoundation.org — redirects are load-bearing)
-- **Platform:** WordPress on Cloudflare
-- **Audit date:** 2026-03-19
+```bash
+./new-client.sh
+```
 
----
+Prompts for client details and creates a ready-to-use directory under `clients/` from the `_template/`.
 
-## SEO Audit (`seo-audit/`)
+## Report Viewer
 
-### Data
+Reports are rendered as a navigable web app in `web/`. Live at `audits.weareoutright.com` (Cloudflare Access — email OTP required).
 
-| File | Contents |
-|---|---|
-| `seo-audit/data/baseline-data.md` | Domain rank overview, top keywords, backlink summary, AI mention data |
-| `seo-audit/data/technical-audit.md` | On-page audit results (9 pages) and Lighthouse scores |
-| `seo-audit/data/full-keyword-inventory.md` | All 270 ranked keywords sorted by search volume |
-| `seo-audit/data/top10-keywords.md` | 88 keywords ranking in positions 1–10 (highest redesign risk) |
-| `seo-audit/data/pages-and-broken-links.md` | All pages with backlinks, 404 pages, and existing redirect chains |
+### Run locally
 
-### Reports
+```bash
+cd web
+npm install
+npm run dev
+```
 
-| Report | File | Description |
-|---|---|---|
-| 1 — Technical Baseline | `seo-audit/reports/01-technical-baseline.md` | Lighthouse scores, on-page SEO issues, structured data gaps, broken pages, infrastructure |
-| 2 — Strategic Baseline | `seo-audit/reports/02-strategic-baseline.md` | Keyword rankings, traffic-driving pages, backlink profile, AI Overview presence |
-| 3 — Redesign Risk Register | `seo-audit/reports/03-redesign-risk-register.md` | URL redirect map, content to preserve, schema plan, broken page fixes, technical debt |
+Opens at `http://localhost:4321`. No auth required locally — all reports are accessible.
+
+### Build
+
+```bash
+cd web
+npm run build
+```
+
+Output goes to `web/dist/`. Deployed automatically by Cloudflare Pages on push to `main`.
+
+## Repo Structure
+
+```
+clients/
+  <client-slug>/
+    CLAUDE.md                    ← client context (URL, CMS, local path, status)
+    seo-audit/
+      data/                      ← raw collected data
+      reports/                   ← final deliverable reports
+    wordpress-audit/
+      data/
+      reports/
+    accessibility-audit/
+      data/
+      reports/
+      screenshots/
+
+_template/                       ← copied by new-client.sh
+web/                             ← Astro report viewer
+  src/
+    lib/reports.ts               ← reads clients/*/reports/*.md at build time
+    pages/                       ← [client]/[report] dynamic routes
+    layouts/
+    styles/
+  package.json
+  astro.config.mjs
+  wrangler.toml                  ← Cloudflare Workers static asset config
+```

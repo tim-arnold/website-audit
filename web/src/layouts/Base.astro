@@ -58,7 +58,7 @@ const auditTypesPresent = AUDIT_ORDER.filter(at => reportsByAuditType[at]?.lengt
                       href={`/${report.client}/${report.slug}/`}
                       class={`sidebar-link${currentSlug === report.slug ? ' active' : ''}`}
                     >
-                      {report.title}
+                      {report.title.replace(/\s+[—–-].+$/, '')}
                     </a>
                   ))}
                 </div>

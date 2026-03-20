@@ -1,35 +1,41 @@
-# Noble Reach — Pre-Redesign Audit
+# Pre-Redesign Audit Framework
 
-## Project
+This repo contains pre-redesign audits across multiple clients. Each client lives in `clients/<slug>/`.
 
-Pre-redesign audit for **noblereach.org**. The goal is to document everything that must be preserved, redirected, or fixed during the rebuild.
+## Structure
 
-## Current State
+```
+clients/
+  <client-slug>/
+    CLAUDE.md                    ← client context (URL, CMS, local path, status)
+    seo-audit/
+      data/                      ← raw collected data
+      reports/                   ← final deliverable reports
+    wordpress-audit/
+      data/
+      reports/
+    accessibility-audit/
+      data/
+      reports/
+      screenshots/
 
-- SEO audit is complete — data and reports are in `seo-audit/`
-- WordPress audit: planned
-- Accessibility audit: planned
+_template/                       ← copy this to bootstrap a new client
+  CLAUDE.md                      ← fill in {{PLACEHOLDERS}} or run new-client.sh
+  seo-audit/HANDOFF.md
+  wordpress-audit/HANDOFF.md
+  accessibility-audit/HANDOFF.md
+```
 
-## Key Facts About the Target Site
+## Starting a New Client
 
-- Domain: noblereach.org (previously noblereachfoundation.org — redirects are load-bearing)
-- Hosted on Cloudflare, running WordPress
-- Person pages (`/person/`) are the primary traffic drivers
-- 113 backlinks from .edu domains — highest-value links, mostly to Scholars and Emerge program pages
-- 270 ranked keywords, ~1,685 monthly organic visits
-- Site appears in Google AI Overviews for several queries
+```bash
+./new-client.sh
+```
 
-## Tools Available
+The script will prompt for client details and create a ready-to-use directory under `clients/`.
 
-- **DataForSEO MCP** (`dfs-mcp`): SERP data, keyword volumes, on-page audits, Lighthouse, backlinks, AI mentions
-  - Backlinks API: `backlinks_summary`, `referring_domains`, and `anchors` work. `backlinks_backlinks` endpoint returns access denied — do not retry.
-  - LLM mentions API: active (14-day trial)
-- **Playwright MCP**: browser automation for page-level inspection if needed
-- **Sanity MCP**: connected but not relevant to this audit work
+## Clients
 
-## Conventions
-
-- Each audit type lives in its own subdirectory: `seo-audit/`, `wordpress-audit/`, `accessibility-audit/`, etc.
-- Within each audit: raw/structured data goes in `<audit>/data/`, final reports go in `<audit>/reports/`
-- Use markdown tables for all data presentation
-- Reports should be factual and actionable — the audience is a dev team doing a site rebuild
+| Client | URL | Status |
+|---|---|---|
+| noble-reach | https://noblereach.org | SEO ✓ · WordPress ✓ · Accessibility ✓ |

@@ -53,7 +53,7 @@ replace_in_file() {
   sed -i '' "s|${placeholder}|${value}|g" "$file"
 }
 
-# ── gather input ───────────────────────────────────────────────────────────────
+# ── client basics ───────────────────────────────────────────────────────────────
 
 echo ""
 echo "New client setup"
@@ -78,78 +78,7 @@ echo ""
 PUBLIC_URL=$(prompt "Public URL" "https://")
 PREVIOUS_DOMAIN=$(prompt_optional "Previous/old domain")
 
-# ── CMS selection ──────────────────────────────────────────────────────────────
-
-echo ""
-echo "  CMS / platform:"
-echo "    1) WordPress"
-echo "    2) Headless WordPress (WP backend + decoupled frontend)"
-echo "    3) Next.js / React"
-echo "    4) Nuxt / Vue"
-echo "    5) Astro"
-echo "    6) HTML / Static"
-echo "    7) Webflow"
-echo "    8) Squarespace"
-echo "    9) Other"
-echo ""
-read -rp "  Choose [1-9]: " cms_choice
-
-case "${cms_choice:-1}" in
-  1) CMS="WordPress";                    IS_WORDPRESS=true;  IS_HEADLESS=false ;;
-  2) CMS="Headless WordPress";           IS_WORDPRESS=true;  IS_HEADLESS=true  ;;
-  3) CMS="Next.js";                      IS_WORDPRESS=false; IS_HEADLESS=false ;;
-  4) CMS="Nuxt";                         IS_WORDPRESS=false; IS_HEADLESS=false ;;
-  5) CMS="Astro";                        IS_WORDPRESS=false; IS_HEADLESS=false ;;
-  6) CMS="HTML/Static";                  IS_WORDPRESS=false; IS_HEADLESS=false ;;
-  7) CMS="Webflow";                      IS_WORDPRESS=false; IS_HEADLESS=false ;;
-  8) CMS="Squarespace";                  IS_WORDPRESS=false; IS_HEADLESS=false ;;
-  9) CMS=$(prompt "Platform name");      IS_WORDPRESS=false; IS_HEADLESS=false ;;
-  *) CMS="WordPress";                    IS_WORDPRESS=true;  IS_HEADLESS=false ;;
-esac
-
-# Headless: ask for the frontend framework separately
-FRONTEND_FRAMEWORK=""
-if [[ "$IS_HEADLESS" == true ]]; then
-  echo ""
-  echo "  Frontend framework:"
-  echo "    1) Next.js"
-  echo "    2) Nuxt"
-  echo "    3) Astro"
-  echo "    4) SvelteKit"
-  echo "    5) Other"
-  echo ""
-  read -rp "  Choose [1-5]: " fe_choice
-  case "${fe_choice:-1}" in
-    1) FRONTEND_FRAMEWORK="Next.js"    ;;
-    2) FRONTEND_FRAMEWORK="Nuxt"       ;;
-    3) FRONTEND_FRAMEWORK="Astro"      ;;
-    4) FRONTEND_FRAMEWORK="SvelteKit"  ;;
-    5) FRONTEND_FRAMEWORK=$(prompt "Framework name") ;;
-    *) FRONTEND_FRAMEWORK="Next.js"    ;;
-  esac
-  CMS="Headless WordPress ($FRONTEND_FRAMEWORK frontend)"
-fi
-
-HOSTING=$(prompt "Hosting" "$(
-  case "${cms_choice:-1}" in
-    7) echo "Webflow" ;;
-    8) echo "Squarespace" ;;
-    *) echo "Vercel" ;;
-  esac
-)")
-
-# ── local path ─────────────────────────────────────────────────────────────────
-
-echo ""
-LOCAL_SITE_PATH="N/A"
-if [[ "$IS_WORDPRESS" == true ]]; then
-  read -rp "  Local WordPress path (press Enter to skip): " LOCAL_SITE_PATH_INPUT
-else
-  read -rp "  Local repo path (press Enter to skip): " LOCAL_SITE_PATH_INPUT
-fi
-[[ -n "$LOCAL_SITE_PATH_INPUT" ]] && LOCAL_SITE_PATH="$LOCAL_SITE_PATH_INPUT"
-
-# ── audit selection ────────────────────────────────────────────────────────────
+# ── audit selection ─────────────────────────────────────────────────────────────
 
 echo ""
 echo "Audits to include:"
@@ -157,8 +86,87 @@ prompt_yn "  SEO audit" "y"           && INCLUDE_SEO=true  || INCLUDE_SEO=false
 prompt_yn "  Technology audit" "y"    && INCLUDE_TECH=true || INCLUDE_TECH=false
 prompt_yn "  Accessibility audit" "y" && INCLUDE_A11Y=true || INCLUDE_A11Y=false
 
+# ── technology audit details (only if selected) ─────────────────────────────────
+
+CMS="Unknown"
+HOSTING="Unknown"
+LOCAL_SITE_PATH="N/A"
+IS_WORDPRESS=false
+IS_HEADLESS=false
+FRONTEND_FRAMEWORK=""
 TECH_AUDIT_MODE=""
+
 if [[ "$INCLUDE_TECH" == true ]]; then
+
+  # CMS / platform
+  echo ""
+  echo "  CMS / platform:"
+  echo "    1) WordPress"
+  echo "    2) Headless WordPress (WP backend + decoupled frontend)"
+  echo "    3) Next.js / React"
+  echo "    4) Nuxt / Vue"
+  echo "    5) Astro"
+  echo "    6) HTML / Static"
+  echo "    7) Webflow"
+  echo "    8) Squarespace"
+  echo "    9) Other"
+  echo ""
+  read -rp "  Choose [1-9]: " cms_choice
+
+  case "${cms_choice:-1}" in
+    1) CMS="WordPress";          IS_WORDPRESS=true;  IS_HEADLESS=false ;;
+    2) CMS="Headless WordPress"; IS_WORDPRESS=true;  IS_HEADLESS=true  ;;
+    3) CMS="Next.js";            IS_WORDPRESS=false; IS_HEADLESS=false ;;
+    4) CMS="Nuxt";               IS_WORDPRESS=false; IS_HEADLESS=false ;;
+    5) CMS="Astro";              IS_WORDPRESS=false; IS_HEADLESS=false ;;
+    6) CMS="HTML/Static";        IS_WORDPRESS=false; IS_HEADLESS=false ;;
+    7) CMS="Webflow";            IS_WORDPRESS=false; IS_HEADLESS=false ;;
+    8) CMS="Squarespace";        IS_WORDPRESS=false; IS_HEADLESS=false ;;
+    9) CMS=$(prompt "Platform name"); IS_WORDPRESS=false; IS_HEADLESS=false ;;
+    *) CMS="WordPress";          IS_WORDPRESS=true;  IS_HEADLESS=false ;;
+  esac
+
+  # Headless: frontend framework
+  if [[ "$IS_HEADLESS" == true ]]; then
+    echo ""
+    echo "  Frontend framework:"
+    echo "    1) Next.js"
+    echo "    2) Nuxt"
+    echo "    3) Astro"
+    echo "    4) SvelteKit"
+    echo "    5) Other"
+    echo ""
+    read -rp "  Choose [1-5]: " fe_choice
+    case "${fe_choice:-1}" in
+      1) FRONTEND_FRAMEWORK="Next.js"   ;;
+      2) FRONTEND_FRAMEWORK="Nuxt"      ;;
+      3) FRONTEND_FRAMEWORK="Astro"     ;;
+      4) FRONTEND_FRAMEWORK="SvelteKit" ;;
+      5) FRONTEND_FRAMEWORK=$(prompt "Framework name") ;;
+      *) FRONTEND_FRAMEWORK="Next.js"   ;;
+    esac
+    CMS="Headless WordPress ($FRONTEND_FRAMEWORK frontend)"
+  fi
+
+  # Hosting
+  HOSTING=$(prompt "Hosting" "$(
+    case "${cms_choice:-1}" in
+      7) echo "Webflow" ;;
+      8) echo "Squarespace" ;;
+      *) echo "Vercel" ;;
+    esac
+  )")
+
+  # Local path
+  echo ""
+  if [[ "$IS_WORDPRESS" == true ]]; then
+    read -rp "  Local WordPress path (press Enter to skip): " LOCAL_SITE_PATH_INPUT
+  else
+    read -rp "  Local repo path (press Enter to skip): " LOCAL_SITE_PATH_INPUT
+  fi
+  [[ -n "${LOCAL_SITE_PATH_INPUT:-}" ]] && LOCAL_SITE_PATH="$LOCAL_SITE_PATH_INPUT"
+
+  # Tech audit mode
   if [[ "$LOCAL_SITE_PATH" != "N/A" ]]; then
     TECH_AUDIT_MODE="filesystem"
   else
@@ -174,6 +182,7 @@ if [[ "$INCLUDE_TECH" == true ]]; then
       *) TECH_AUDIT_MODE="frontend" ;;
     esac
   fi
+
 fi
 
 # ── confirm ────────────────────────────────────────────────────────────────────
@@ -185,14 +194,14 @@ echo "  Slug:            $SLUG"
 echo "  Directory:       clients/$SLUG/"
 echo "  Public URL:      $PUBLIC_URL"
 echo "  Previous domain: $PREVIOUS_DOMAIN"
-echo "  CMS:             $CMS"
-echo "  Hosting:         $HOSTING"
-echo "  Local path:      $LOCAL_SITE_PATH"
+[[ "$INCLUDE_TECH" == true ]] && echo "  CMS:             $CMS"
+[[ "$INCLUDE_TECH" == true ]] && echo "  Hosting:         $HOSTING"
+[[ "$INCLUDE_TECH" == true ]] && echo "  Local path:      $LOCAL_SITE_PATH"
 echo ""
 echo "  Audits:"
-[[ "$INCLUDE_SEO"   == true ]] && echo "    ✓ SEO"
-[[ "$INCLUDE_TECH"  == true ]] && echo "    ✓ Technology ($TECH_AUDIT_MODE$([ "$IS_HEADLESS" == true ] && echo ", headless"))"
-[[ "$INCLUDE_A11Y"  == true ]] && echo "    ✓ Accessibility"
+[[ "$INCLUDE_SEO"  == true ]] && echo "    ✓ SEO"
+[[ "$INCLUDE_TECH" == true ]] && echo "    ✓ Technology ($TECH_AUDIT_MODE$([ "$IS_HEADLESS" == true ] && echo ", headless"))"
+[[ "$INCLUDE_A11Y" == true ]] && echo "    ✓ Accessibility"
 echo ""
 read -rp "Proceed? [Y/n]: " confirm
 if [[ "${confirm,,}" == "n" ]]; then
@@ -200,7 +209,7 @@ if [[ "${confirm,,}" == "n" ]]; then
   exit 0
 fi
 
-# ── create directory ───────────────────────────────────────────────────────────
+# ── create directories ─────────────────────────────────────────────────────────
 
 mkdir -p "$CLIENT_DIR"
 cp "$TEMPLATE_DIR/CLAUDE.md" "$CLIENT_DIR/CLAUDE.md"

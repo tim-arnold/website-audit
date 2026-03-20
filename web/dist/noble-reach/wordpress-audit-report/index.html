@@ -1,0 +1,425 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="robots" content="noindex, nofollow"><title>WordPress Audit Report — noblereach.org — Audit Reports</title><link rel="stylesheet" href="/_astro/_report_.DwQS7a0K.css"></head> <body> <div class="layout"> <aside class="sidebar"> <a href="/" class="sidebar-logo">Audit Reports</a> <nav class="sidebar-nav">  <div class="sidebar-client">Client</div> <div class="sidebar-client-name">Noble Reach Foundation</div> <div> <div class="sidebar-section">SEO</div> <a href="/noble-reach/01-technical-baseline/" class="sidebar-link"> Report 1: Technical Baseline — noblereach.org </a><a href="/noble-reach/02-strategic-baseline/" class="sidebar-link"> Report 2: Strategic Baseline — noblereach.org </a><a href="/noble-reach/03-redesign-risk-register/" class="sidebar-link"> Report 3: Redesign Risk Register — noblereach.org </a> </div><div> <div class="sidebar-section">WordPress</div> <a href="/noble-reach/wordpress-audit-report/" class="sidebar-link active"> WordPress Audit Report — noblereach.org </a> </div><div> <div class="sidebar-section">Accessibility</div> <a href="/noble-reach/accessibility-audit-report/" class="sidebar-link"> Accessibility Audit Report — noblereach.org </a> </div> </nav> </aside> <main class="main"> <div class="main-inner">  <nav class="report-header"> <a href="/">Reports</a> <span class="sep">/</span> <a href="/noble-reach/">Noble Reach Foundation</a> <span class="sep">/</span> <span class="audit-badge">WordPress</span> <span class="sep">/</span> <span>WordPress Audit Report — noblereach.org</span> </nav> <article class="prose"><h1>WordPress Audit Report — noblereach.org</h1>
+<p><strong>Prepared:</strong> 2026-03-20
+<strong>Source:</strong> Filesystem analysis of local WPEngine copy (<code>/Users/timarnold/Local Sites/noble-reach-foundation/app/public</code>)
+<strong>Active theme:</strong> <code>noblereach-2024</code> (Teal Media)
+<strong>Full data:</strong> <code>../data/wordpress-inventory.md</code></p>
+<hr>
+<h2>Executive Summary</h2>
+<ul>
+<li><strong>The content model is entirely ACF-driven.</strong> 46 field group JSON files define all content structure beyond title/body. Without ACF (or a content migration that maps these fields), the existing content is unreadable.</li>
+<li><strong>The <code>person</code> CPT is the single highest-risk asset.</strong> It drives 88 of the site&#39;s top-10 ranked keywords and receives the majority of organic traffic (see <code>seo-audit/reports/03-redesign-risk-register.md</code>). Its slug (<code>/person/</code>) is hardcoded and must not change.</li>
+<li><strong>Three things require a DB export before decommissioning:</strong> Redirection plugin rules, Gravity Forms definitions, and all ACF field values (which are <code>wp_postmeta</code> rows). None of these are in the filesystem.</li>
+<li><strong>The active theme uses Timber/Twig</strong>, not native WP templates. The rebuild team needs to account for this when auditing Twig template logic — it is not standard PHP.</li>
+<li><strong>BugHerd is loading on production pages</strong> with a hardcoded API key in <code>inc/core.php</code>. It was flagged in the SEO audit as reducing the Best Practices Lighthouse score. Remove it.</li>
+<li><strong><code>action</code> and <code>resource</code> CPTs are registered as non-public.</strong> They are surfaced only via custom queries in page templates, not through standard WP archive routing. The rebuild must replicate this pattern or implement equivalent content queries.</li>
+<li><strong>The <code>wp-force-login</code> plugin is active</strong> — this means the entire site requires login to view. Ensure it is deactivated before any public launch.</li>
+</ul>
+<hr>
+<h2>1. Architecture Overview</h2>
+<h3>How the Site Is Built</h3>
+<p>noblereach.org runs on WordPress with the <code>noblereach-2024</code> theme by Teal Media. The theme uses <strong>Timber</strong> (Twig templating) — PHP files handle WP routing and data preparation; Twig files handle all HTML rendering.</p>
+<pre><code>Request → PHP template (e.g. single-person.php)
+        → Timber::render() with context array
+        → Twig template (e.g. team--individual.twig)
+        → HTML output
+</code></pre>
+<p><strong>Content model:</strong> All structured content beyond title/body is stored via <strong>Advanced Custom Fields Pro</strong>. Field group definitions are version-controlled as JSON files in <code>acf-json/</code>. Field <em>values</em> are in the database as <code>wp_postmeta</code>.</p>
+<p><strong>Component architecture:</strong> The theme uses ACF&#39;s <code>clone</code> field to create a shared component library. Component definitions live in library field groups (<code>group_66103c34a2966</code>), and page-specific field groups clone from this library. The main page-building engine is a <code>flexible_content</code> field (<code>layout</code>) with 28 available layout types.</p>
+<p><strong>Multi-site heritage:</strong> The theme is part of Teal Media&#39;s multi-site codebase (includes <code>inc/site_specific.php</code> patterns). NobleReach has no active site-specific constant overrides for CPT slugs — it uses the ACF options page values instead.</p>
+<h3>File Locations</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Asset</th>
+<th>Path</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PHP templates</td>
+<td><code>wp-content/themes/noblereach-2024/*.php</code></td>
+</tr>
+<tr>
+<td>Twig templates</td>
+<td><code>wp-content/themes/noblereach-2024/_html/templates/</code></td>
+</tr>
+<tr>
+<td>Theme functions</td>
+<td><code>wp-content/themes/noblereach-2024/inc/</code></td>
+</tr>
+<tr>
+<td>ACF field group JSON</td>
+<td><code>wp-content/themes/noblereach-2024/acf-json/</code> (46 files)</td>
+</tr>
+<tr>
+<td>CSS</td>
+<td><code>wp-content/themes/noblereach-2024/assets/styles/</code></td>
+</tr>
+<tr>
+<td>JS</td>
+<td><code>wp-content/themes/noblereach-2024/assets/scripts/</code></td>
+</tr>
+</tbody></table></div>
+<hr>
+<h2>2. Content Model</h2>
+<h3>Custom Post Types</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>CPT</th>
+<th>URL Slug</th>
+<th>Public</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>person</code></td>
+<td><code>/person/</code></td>
+<td>Yes</td>
+<td>Primary traffic driver. Fixed slug — cannot change. No archive.</td>
+</tr>
+<tr>
+<td><code>story</code></td>
+<td><code>/stories/</code></td>
+<td>Yes</td>
+<td>Fixed slug. 2024 theme only. No archive.</td>
+</tr>
+<tr>
+<td><code>news</code></td>
+<td><code>/news/</code> (configurable)</td>
+<td>Yes</td>
+<td>Slug set in ACF options. No archive (page template used instead).</td>
+</tr>
+<tr>
+<td><code>action</code></td>
+<td><code>/actions/</code> (configurable)</td>
+<td><strong>No</strong></td>
+<td>Jobs/opportunities. Not public, not searchable. Surfaced via page templates.</td>
+</tr>
+<tr>
+<td><code>resource</code></td>
+<td><code>/resources/</code> (configurable)</td>
+<td><strong>No</strong></td>
+<td>Whitepapers, etc. Not public, not searchable. Surfaced via page templates.</td>
+</tr>
+<tr>
+<td><code>event</code></td>
+<td><code>/events/</code> (configurable)</td>
+<td>Yes</td>
+<td>Disabled by default in admin.</td>
+</tr>
+<tr>
+<td><code>case-studies</code></td>
+<td><code>/case-studies/</code></td>
+<td>—</td>
+<td><strong>Commented out.</strong> Do not migrate.</td>
+</tr>
+</tbody></table></div>
+<h3>Taxonomies by CPT</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>CPT</th>
+<th>Taxonomy</th>
+<th>Slug</th>
+<th>Hierarchical</th>
+<th>Configurable</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>person</code></td>
+<td><code>person_type</code></td>
+<td><code>person_type</code></td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>story</code></td>
+<td><code>story_type</code></td>
+<td><code>story_type</code></td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>story</code></td>
+<td><code>partnership_tax</code></td>
+<td>—</td>
+<td>Yes</td>
+<td>No (shadow taxonomy)</td>
+</tr>
+<tr>
+<td><code>news</code></td>
+<td><code>news_tax</code></td>
+<td>configurable</td>
+<td>No</td>
+<td>Yes (slug + label)</td>
+</tr>
+<tr>
+<td><code>resource</code></td>
+<td><code>resource_tax</code></td>
+<td>configurable</td>
+<td>No</td>
+<td>Yes (slug + label)</td>
+</tr>
+<tr>
+<td><code>action</code></td>
+<td><code>job_type</code></td>
+<td><code>job_type</code></td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>action</code></td>
+<td><code>job_category</code></td>
+<td><code>job_category</code></td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>event</code></td>
+<td><code>event_type</code></td>
+<td><code>event_type</code></td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+</tbody></table></div>
+<h3>ACF Field Groups by Content Area</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Content Type</th>
+<th>Field Group</th>
+<th>Key Fields</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Person</strong></td>
+<td>Single - Person</td>
+<td>header (clone), layout flexible content</td>
+</tr>
+<tr>
+<td><strong>News</strong></td>
+<td>Single - News</td>
+<td>header (clone), layout flexible content, author_assignment (relationship)</td>
+</tr>
+<tr>
+<td><strong>Story</strong></td>
+<td>Single - Story</td>
+<td>header (clone), layout flexible content, related_story, call_to_action</td>
+</tr>
+<tr>
+<td><strong>Action/Job</strong></td>
+<td>Single – Jobs</td>
+<td>title, short/brief description, job_type, job_category, excerpt, disclaimer, layout, action_embed (form), offsite_links</td>
+</tr>
+<tr>
+<td><strong>Event</strong></td>
+<td>Single - Event</td>
+<td>header (clone), sidebar, layout flexible content</td>
+</tr>
+<tr>
+<td><strong>Default Page</strong></td>
+<td>Single - Page</td>
+<td>header (clone), layout flexible content</td>
+</tr>
+<tr>
+<td><strong>Homepage</strong></td>
+<td>Template - Home</td>
+<td>hero, image_and_text, featured_talent_stories, stats, carousel, upcoming_events, email_signup, recent_news</td>
+</tr>
+<tr>
+<td><strong>Global Options</strong></td>
+<td>Site Options</td>
+<td>CPT slugs/labels, alert banner, GTM ID, 404 page, landing page assignments, modal frequency</td>
+</tr>
+</tbody></table></div>
+<p>The <strong>Layout flexible content field</strong> (28 layouts) is the primary page-building mechanism. Nearly every template clones it. Layouts include: Accordion, CTA, Image+Text, Image Grid, Logo Carousel, Statistics, WYSIWYG, WYSIWYG Columns, Quote Carousel, Timeline/Key Dates, Email Signup, People grid, Map, and more. See the full list in <code>../data/wordpress-inventory.md</code>.</p>
+<hr>
+<h2>3. Critical Dependencies</h2>
+<h3>ACF Field Structure</h3>
+<p>The content model will not make sense without the ACF field group definitions. These are already exported to <code>acf-json/</code> directories in both themes, so the schema is preserved. However, the <strong>field values</strong> (every post&#39;s actual content) live in <code>wp_postmeta</code> and require a full database export.</p>
+<p>The ACF options page (<code>nr-general-settings</code>) stores critical global configuration in <code>wp_options</code>:</p>
+<ul>
+<li>Which CPTs are active and what their slugs/labels are</li>
+<li>Which pages serve as landing pages for news, resources, etc.</li>
+<li>GTM container ID</li>
+<li>Alert banner content and frequency</li>
+<li>Global UI strings</li>
+</ul>
+<p>This <code>wp_options</code> data must be exported with the DB.</p>
+<h3>Gravity Forms (Form Submissions + HubSpot Integration)</h3>
+<ul>
+<li>Form definitions live in Gravity Forms custom DB tables — <strong>not in WP post tables or files</strong>.</li>
+<li>Form IDs are referenced dynamically via ACF field values. The actual ID values are in the DB.</li>
+<li>The <code>gravityformshubspot</code> integration connects submissions to HubSpot. Credentials are in plugin settings (wp_options).</li>
+<li><strong>Export steps:</strong> Forms → Import/Export → Export Forms (JSON) + export entries if needed.</li>
+</ul>
+<h3>Redirection Plugin Rules</h3>
+<ul>
+<li>All redirect rules are in the database (<code>wp_redirection_*</code> tables).</li>
+<li>The SEO audit identified that <code>noblereachfoundation.org → noblereach.org</code> redirects are <strong>load-bearing</strong> — 113 .edu backlinks depend on them.</li>
+<li><strong>Export before decommission:</strong> Redirection admin → Tools → Import/Export → JSON.</li>
+<li>After export, verify the redirect rules cover the old domain, the old path structure, and any known URL changes.</li>
+</ul>
+<h3>Yoast SEO Meta</h3>
+<ul>
+<li>Meta titles, descriptions, canonical URLs, and OG images are stored in <code>wp_postmeta</code> with <code>_yoast_wpseo_*</code> keys.</li>
+<li>The <code>acf-content-analysis-for-yoast-seo</code> plugin feeds ACF field content into Yoast&#39;s analysis — this means SEO titles may reference ACF field values.</li>
+<li><strong>Migration:</strong> Full DB export captures this. If rebuilding on a non-WP platform, the SEO meta must be mapped from the DB export to the new system.</li>
+</ul>
+<hr>
+<h2>4. Functionality to Replicate</h2>
+<h3>Shadow Taxonomy System (<code>inc/shadow-tax.php</code>)</h3>
+<p>Every <code>partnership</code> CPT post has a corresponding <code>partnership_tax</code> taxonomy term. The system:</p>
+<ol>
+<li>Creates a <code>partnership_tax</code> term when a partnership post is saved</li>
+<li>Keeps the term name/slug in sync with the post title/slug</li>
+<li>Assigns <code>partnership_tax</code> terms to <code>story</code> posts via the <code>header_related_partnership</code> ACF relationship field</li>
+</ol>
+<p>This allows a story to be queried by partnership without a direct post relationship. If the rebuild uses a different data model (e.g., direct references), this sync logic is no longer needed — but the existing content relationships must be preserved in migration.</p>
+<h3>Configurable CPT Slugs and Labels</h3>
+<p>CPT slugs (<code>/news/</code>, <code>/resources/</code>, <code>/actions/</code>) and taxonomy slugs/labels are stored in ACF options (the <code>custom_post_types</code> group on the <code>nr-general-settings</code> options page). The theme reads these at <code>init</code> hook (priority 3/4) to register CPTs with the correct slugs.</p>
+<p><strong>Why this matters:</strong> If the rebuild system hard-codes slugs, any future slug changes would require code changes instead of admin configuration. Preserve this configurability if the new system allows it.</p>
+<h3>Custom Search Behavior</h3>
+<p>Two significant search modifications:</p>
+<ol>
+<li><p><strong>URL rewrite:</strong> <code>/query/[term]</code> → <code>/?s=[term]</code> (the Twig search template uses <code>?query=</code> instead of WordPress&#39;s <code>?s=</code>). Registered in <code>functions.php</code>.</p>
+</li>
+<li><p><strong>ACF meta search:</strong> WordPress search is extended via <code>posts_join</code> / <code>posts_where</code> / <code>posts_distinct</code> filters to search <code>wp_postmeta</code> values, not just post title and content. This allows ACF field content (descriptions, bios, etc.) to appear in search results.</p>
+</li>
+</ol>
+<p>Additionally, search is scoped to <code>post</code>, <code>page</code>, <code>event</code>, <code>person</code> post types (not all CPTs).</p>
+<h3>Offsite Link Redirect</h3>
+<p>The <code>action</code> (jobs) and <code>news</code> CPTs support an <code>offsite_links</code> ACF group field (<code>is_offsite_link</code>, <code>url</code>). When set:</p>
+<ul>
+<li>The <code>post_type_link</code> filter replaces the internal WP permalink with the external URL</li>
+<li>Front-end visitors are redirected away from the WP post URL (<code>tm_redirect_for_offsite_links()</code>)</li>
+<li>Logged-in users see the internal page with an admin notice</li>
+</ul>
+<p>This is used for news items that live on external publications and for job postings hosted on third-party sites.</p>
+<h3>Secure Downloads (Legacy Theme Only)</h3>
+<p>The legacy theme (<code>noblereach/</code>) includes <code>inc/secure_downloads.php</code>. This functionality does <strong>not</strong> appear in the 2024 theme. If secure downloads are actively used, investigate whether they are handled by a plugin or another mechanism.</p>
+<h3>Featured Image Override</h3>
+<p>For <code>news</code> and <code>action</code> CPTs, the featured image is sourced from the ACF field <code>component_featured_image</code> rather than the WP native <code>_thumbnail_id</code>. This is done via a <code>get_post_metadata</code> filter in <code>inc/core.php</code>. Any rebuild system querying featured images for these CPTs must account for this.</p>
+<h3>HubSpot Form Embed</h3>
+<p>Beyond Gravity Forms, there is a hardcoded HubSpot embed in <code>inc/misc.php</code>:</p>
+<ul>
+<li>Portal ID: <code>39514383</code></li>
+<li>Form ID: <code>1a9f6104-35b3-4221-9925-dad04d5265c9</code></li>
+</ul>
+<p>This is used via <code>tm_print_new_nr_salesforce_form()</code>. If this form is still in use, the embed credentials must carry over.</p>
+<h3>MapSVG Configuration</h3>
+<p>The <code>map</code> layout in the flexible content engine uses MapSVG. Map data is also stored in an ACF options page (<code>map-options</code>). MapSVG stores its own data in custom DB tables. Export MapSVG maps separately.</p>
+<hr>
+<h2>5. What to Drop</h2>
+<h3>Dev Tools</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Location</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>BugHerd</td>
+<td>Hardcoded in <code>inc/core.php:416-419</code></td>
+<td>Remove the two <code>add_action</code> calls and the plugin</td>
+</tr>
+<tr>
+<td>Query Monitor plugin</td>
+<td><code>plugins/query-monitor/</code></td>
+<td>Deactivate and remove</td>
+</tr>
+<tr>
+<td>Dummybot plugin</td>
+<td><code>plugins/dummybot-master/</code></td>
+<td>Remove</td>
+</tr>
+<tr>
+<td>Duplicate Post plugin</td>
+<td><code>plugins/duplicate-post/</code></td>
+<td>Remove from production</td>
+</tr>
+<tr>
+<td>Enable Media Replace</td>
+<td><code>plugins/enable-media-replace/</code></td>
+<td>Remove from production</td>
+</tr>
+<tr>
+<td>Ajax Thumbnail Rebuild</td>
+<td><code>plugins/ajax-thumbnail-rebuild/</code></td>
+<td>Remove after media migration</td>
+</tr>
+<tr>
+<td>Better Search Replace</td>
+<td><code>plugins/better-search-replace/</code></td>
+<td>Remove after migration</td>
+</tr>
+</tbody></table></div>
+<h3>Dead Code</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Location</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>case-studies</code> CPT</td>
+<td><code>inc/types.php:35-52</code></td>
+<td>Already commented out. Do not restore.</td>
+</tr>
+<tr>
+<td><code>case-studies</code> single template</td>
+<td><code>single-case-studies.php</code></td>
+<td>Delete</td>
+</tr>
+<tr>
+<td>Salesforce Web-to-Lead form</td>
+<td><code>inc/misc.php:624-691</code></td>
+<td>Legacy form for Emerge program. Verify if still active before removing.</td>
+</tr>
+<tr>
+<td>Components (Old) field group</td>
+<td><code>acf-json/group_5e30f77503576.json</code></td>
+<td>Legacy component library. Check if any live pages still use these fields.</td>
+</tr>
+<tr>
+<td>Layout (ARCHIVE) field group</td>
+<td><code>acf-json/group_66255538475e3.json</code></td>
+<td>Appears to be a duplicate/archive of the main Layout group. Verify before removing.</td>
+</tr>
+</tbody></table></div>
+<h3>Legacy Theme</h3>
+<p>The <code>noblereach/</code> theme (ARCHIE) should not be migrated. Document it for reference only. Notable: it contains <code>inc/secure_downloads.php</code> which the 2024 theme does not have — verify this feature is no longer in use.</p>
+<h3>Multi-Site Code</h3>
+<p>The 2024 theme includes Teal Media multi-site infrastructure (<code>inc/site_specific.php</code>, constant-based slug overrides via <code>SLUG_NEWS</code>, <code>SLUG_RESOURCE</code>). NobleReach doesn&#39;t use these constants, but the code paths check for them. These are safe to remove in a Noble-Reach-specific rebuild.</p>
+<h3><code>wp-force-login</code> Plugin</h3>
+<p>This plugin gates the entire site behind a login screen. It is likely used for the staging environment. Ensure it is <strong>not active on the production rebuild</strong>.</p>
+<hr>
+<h2>6. Migration Checklist</h2>
+<p>Before decommissioning the current WordPress environment:</p>
+<ul>
+<li><input disabled="" type="checkbox"> <strong>ACF field group exports</strong> — already present in <code>acf-json/</code> directories. Verify completeness (44 groups in 2024 theme + 24 in legacy theme).</li>
+<li><input disabled="" type="checkbox"> <strong>Full database export</strong> — captures all postmeta (ACF field values, Yoast SEO meta), options page values, term relationships, and user data.</li>
+<li><input disabled="" type="checkbox"> <strong>Redirection plugin export</strong> — Admin → Redirection → Tools → Import/Export → JSON. Verify export includes all groups and the <code>noblereachfoundation.org</code> redirect rules.</li>
+<li><input disabled="" type="checkbox"> <strong>Gravity Forms export</strong> — Admin → Forms → Import/Export → Export Forms (JSON). Capture all forms.</li>
+<li><input disabled="" type="checkbox"> <strong>Gravity Forms entries export</strong> — If submission history needs to be preserved.</li>
+<li><input disabled="" type="checkbox"> <strong>HubSpot API credentials</strong> — Document portal ID and any API keys from the gravityformshubspot plugin settings.</li>
+<li><input disabled="" type="checkbox"> <strong>Yoast SEO meta</strong> — Captured in full DB export. If migrating off WordPress, extract <code>_yoast_wpseo_*</code> postmeta rows explicitly.</li>
+<li><input disabled="" type="checkbox"> <strong>Media library</strong> — Full <code>wp-content/uploads/</code> directory. Includes images, SVGs, and any uploaded fonts.</li>
+<li><input disabled="" type="checkbox"> <strong>MapSVG maps</strong> — Export from MapSVG admin if interactive maps are being carried forward.</li>
+<li><input disabled="" type="checkbox"> <strong>ACF options page values</strong> — Captured in DB export (<code>wp_options</code> rows with key prefix <code>options_</code>). Critical: CPT slugs, GTM ID, landing page assignments, global strings.</li>
+<li><input disabled="" type="checkbox"> <strong>BugHerd API key</strong> — Remove from <code>inc/core.php</code> before any production deployment on the new stack.</li>
+<li><input disabled="" type="checkbox"> <strong><code>wp-force-login</code> deactivation</strong> — Confirm deactivated on production.</li>
+<li><input disabled="" type="checkbox"> <strong>Relevanssi index rebuild</strong> — After content migration, rebuild the search index.</li>
+</ul>
+<h3>Cross-Reference: SEO Audit Risk Register</h3>
+<p>The SEO audit (<code>seo-audit/reports/03-redesign-risk-register.md</code>) identifies the following risks that are directly tied to WordPress configuration:</p>
+<ul>
+<li><strong><code>/person/</code> URL structure</strong> — Drives 88 top-10 keywords. Must be preserved exactly. Person CPT slug is hardcoded (not configurable).</li>
+<li><strong>Redirect chain from <code>noblereachfoundation.org</code></strong> — 113 .edu backlinks flow through this. The Redirection plugin manages these. Must be exported and re-implemented in the new stack (Cloudflare rules, new CMS redirect config, or Nginx config).</li>
+<li><strong>Yoast SEO titles</strong> — The person CPT pages have custom SEO titles that drive click-through rates for program-related queries. Must migrate with the content.</li>
+</ul>
+</article>  </div> </main> </div> </body></html>

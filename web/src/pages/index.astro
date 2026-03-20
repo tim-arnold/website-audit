@@ -1,0 +1,39 @@
+---
+import Base from '../layouts/Base.astro';
+import { getClients, getClientName, getClientReports } from '$lib/reports';
+
+const clients = getClients();
+const clientData = clients.map(client => ({
+  slug: client,
+  name: getClientName(client),
+  reports: getClientReports(client),
+}));
+---
+
+<Base title="Audit Reports">
+  <h1 class="index-heading">Audit Reports</h1>
+  <p class="index-subheading">Pre-redesign audits for client websites.</p>
+
+  {clientData.length === 0 ? (
+    <div class="empty-state">
+      <p>No clients found. Add client directories under <code>clients/</code>.</p>
+    </div>
+  ) : (
+    <div class="client-grid">
+      {clientData.map(({ slug, name, reports }) => {
+        const firstReport = reports[0];
+        const href = firstReport ? `/${slug}/${firstReport.slug}/` : `/${slug}/`;
+        return (
+          <a href={href} class="client-card">
+            <div class="client-card-name">{name}</div>
+            <div class="client-card-slug">{slug}</div>
+            <div class="client-card-reports">
+              <strong>{reports.length}</strong> {reports.length === 1 ? 'report' : 'reports'} available
+            </div>
+            <div class="client-card-arrow">View reports →</div>
+          </a>
+        );
+      })}
+    </div>
+  )}
+</Base>

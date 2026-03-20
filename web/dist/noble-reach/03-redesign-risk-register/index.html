@@ -1,0 +1,835 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="robots" content="noindex, nofollow"><title>Report 3: Redesign Risk Register — noblereach.org — Audit Reports</title><link rel="stylesheet" href="/_astro/_report_.DwQS7a0K.css"></head> <body> <div class="layout"> <aside class="sidebar"> <a href="/" class="sidebar-logo">Audit Reports</a> <nav class="sidebar-nav">  <div class="sidebar-client">Client</div> <div class="sidebar-client-name">Noble Reach Foundation</div> <div> <div class="sidebar-section">SEO</div> <a href="/noble-reach/01-technical-baseline/" class="sidebar-link"> Report 1: Technical Baseline — noblereach.org </a><a href="/noble-reach/02-strategic-baseline/" class="sidebar-link"> Report 2: Strategic Baseline — noblereach.org </a><a href="/noble-reach/03-redesign-risk-register/" class="sidebar-link active"> Report 3: Redesign Risk Register — noblereach.org </a> </div><div> <div class="sidebar-section">WordPress</div> <a href="/noble-reach/wordpress-audit-report/" class="sidebar-link"> WordPress Audit Report — noblereach.org </a> </div><div> <div class="sidebar-section">Accessibility</div> <a href="/noble-reach/accessibility-audit-report/" class="sidebar-link"> Accessibility Audit Report — noblereach.org </a> </div> </nav> </aside> <main class="main"> <div class="main-inner">  <nav class="report-header"> <a href="/">Reports</a> <span class="sep">/</span> <a href="/noble-reach/">Noble Reach Foundation</a> <span class="sep">/</span> <span class="audit-badge">SEO</span> <span class="sep">/</span> <span>Report 3: Redesign Risk Register — noblereach.org</span> </nav> <article class="prose"><h1>Report 3: Redesign Risk Register — noblereach.org</h1>
+<p><strong>Audit date:</strong> 2026-03-19
+<strong>Audience:</strong> Dev team performing site rebuild
+<strong>Purpose:</strong> Actionable checklist of everything that must be preserved, redirected, or fixed during the rebuild to avoid traffic and ranking loss.</p>
+<hr>
+<h2>Executive Summary</h2>
+<ul>
+<li><strong>88 keywords rank in positions 1–10</strong> — any URL change without a 301 redirect loses these rankings immediately.</li>
+<li><strong>The <code>/talent-opportunities/scholars-program/</code> old URL has 33 backlinks from 27 domains</strong> — this redirect must persist through the rebuild or it will lose the most linked non-homepage URL on the site.</li>
+<li><strong><code>noblereachfoundation.org</code> → <code>noblereach.org</code> carries 55+ backlinks</strong> — this domain redirect must never be removed.</li>
+<li><strong>7 pages are currently 404ing with active backlinks</strong> — these need fixes independent of the rebuild.</li>
+<li><strong>No structured data exists anywhere</strong> — adding Person and Article schema in the rebuild is a significant opportunity at low cost.</li>
+<li><strong>BugHerd and AppNexus scripts are loading on production</strong> — remove before launch.</li>
+</ul>
+<hr>
+<h2>1. URL Redirect Map</h2>
+<p>Every URL below either ranks in top 10, has external backlinks, or both. A 301 redirect must be in place from the old URL to the new URL on launch day.</p>
+<p><strong>Legend:</strong> 🔴 Critical (ranks top-10 AND/OR has 5+ backlinks) | 🟡 Important (ranks 11–50 OR has backlinks) | ⬜ Monitor</p>
+<h3>Person Pages</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Current URL</th>
+<th>Ranks For (top keywords)</th>
+<th>Backlinks</th>
+<th>Action Required</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/person/kevin-stitt/</code> 🔴</td>
+<td>governor of oklahoma (6,600), who is governor of oklahoma (1,600)</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/dr-robert-m-gates/</code> 🔴</td>
+<td>robert gates (6,600), bob gates (6,600)</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/general-paul-nakasone-ret/</code> 🔴</td>
+<td>paul nakasone (1,600), nakasone (480)</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/anne-neuberger/</code> 🔴</td>
+<td>anne neuberger (1,600)</td>
+<td>1</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/pulkit-sharma/</code> 🔴</td>
+<td>pulkit sharma (4,400)</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/arun-gupta/</code> 🔴</td>
+<td>arun gupta (720)</td>
+<td>19</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/general-ann-dunwoody/</code> 🔴</td>
+<td>ann dunwoody (880)</td>
+<td>1</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/vivek-kundra/</code> 🔴</td>
+<td>vivek kundra (390)</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/glenn-gaffney/</code> 🔴</td>
+<td>glenn gaffney (480), ufo/uap queries</td>
+<td>2</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/benjamin-claflin/</code> 🔴</td>
+<td>benjamin claflin (880, rank 1)</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/calvin-yang/</code> 🟡</td>
+<td>calvin yang (390, rank 3)</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/victoria-virasingh/</code> 🟡</td>
+<td>victoria virasingh (90, rank 2)</td>
+<td>2</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/sreenivas-sree-ramaswamy/</code> 🟡</td>
+<td>sree ramaswamy (50, rank 2)</td>
+<td>6</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/krishnan-rajagopalan/</code> 🟡</td>
+<td>krishnan rajagopalan (70)</td>
+<td>7</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/sharon-l-hays/</code> 🟡</td>
+<td>sharon hays (90, rank 7)</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/honorable-dave-mccurdy/</code> 🟡</td>
+<td>david mccurdy (170, rank 4)</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/dr-jill-tiefenthaler/</code> 🟡</td>
+<td>ceo national geographic (170)</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/honorable-lisa-disbrow/</code> 🟡</td>
+<td>lisa disbrow (110, rank 6)</td>
+<td>1</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/lieutenant-general-leslie-smith/</code> 🟡</td>
+<td>ltg leslie smith (70), leslie c smith</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/constantine-saab/</code> ⬜</td>
+<td>—</td>
+<td>3</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/michael-brennan/</code> ⬜</td>
+<td>—</td>
+<td>2</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/lieutenant-general-robert-dail/</code> ⬜</td>
+<td>—</td>
+<td>2</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/rabi-chitrakar/</code> ⬜</td>
+<td>—</td>
+<td>2</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/general-ann-dunwoody/</code> ⬜</td>
+<td>—</td>
+<td>1</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/micaela-simeone/</code> ⬜</td>
+<td>—</td>
+<td>1</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/pat-tamburrino/</code> 🟡</td>
+<td>tamburrino (260, rank 19)</td>
+<td>0 direct</td>
+<td>Preserve URL exactly (note: <code>/person/pasquale-tamburrino/</code> is broken with 6 backlinks — see Section 7)</td>
+</tr>
+<tr>
+<td><code>/person/kumar-garg/</code> 🟡</td>
+<td>kumar garg renaissance (50, rank 6)</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/simon-davidson/</code> 🟡</td>
+<td>simon davidson (70, rank 5)</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/jonathon-morgan/</code> 🟡</td>
+<td>jonathon morgan (70, rank 3)</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/vice-admiral-raquel-bono/</code> 🟡</td>
+<td>raquel bono (110, rank 11)</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/person/nina-dudnik/</code> 🟡</td>
+<td>nina dudnik (20, rank 3)</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+</tbody></table></div>
+<h3>Stories Pages</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Current URL</th>
+<th>Ranks For</th>
+<th>Backlinks</th>
+<th>Action Required</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/stories/founders-fund/</code> 🔴</td>
+<td>trae stephens (3,600, rank 8)</td>
+<td>1</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/stories/noblereach-emerge-lightdeck/</code> 🔴</td>
+<td>lightdeck (8,100, rank 19) ⚠️ UTM</td>
+<td>0 direct</td>
+<td>Preserve URL exactly; fix UTM ranking issue</td>
+</tr>
+<tr>
+<td><code>/stories/iora-health-dr-rushika-fernandopulle/</code> 🟡</td>
+<td>rushika fernandopulle (260, rank 5), iora health (590)</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/stories/ginkgo-bioworks-tom-knight/</code> 🟡</td>
+<td>tom knight (720), ginkgo bioworks founders</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/stories/coursera-daphne-koller-and-andrew-ng/</code> 🟡</td>
+<td>coursera founders (210), who owns coursera</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/stories/james-kanoff-terradot/</code> 🟡</td>
+<td>terradot (880), james kanoff (110)</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/stories/noblereach-emerge-mesodyne/</code> 🟡</td>
+<td>mesodyne (320, rank 21)</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/stories/eco-concrete-building-a-greener-future-with-phoenix-materials/</code> 🟡</td>
+<td>phoenix materials (320, rank 10)</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/stories/first-mile-innovations-conlan-gotzions-journey-through-impact-and-ingenuity/</code> ⬜</td>
+<td>—</td>
+<td>2</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/stories/noblereach-at-gcec-2025-shaping-the-future-of-entrepreneurship-education/</code> 🟡</td>
+<td>gcec 2025 (70, rank 6), gcec conference 2025 (110)</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/stories/venture-meets-mission-awarded-2025-axiom-business-book-awards-gold-medal/</code> 🟡</td>
+<td>axiom business book award (70, rank 18)</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+</tbody></table></div>
+<h3>News Pages</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Current URL</th>
+<th>Ranks For</th>
+<th>Backlinks</th>
+<th>Action Required</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/news/16-innovations-fueled-by-the-federal-government/</code> 🔴</td>
+<td>30+ innovation queries (rank 2–95)</td>
+<td>37</td>
+<td><strong>Preserve URL exactly — highest backlinked content page</strong></td>
+</tr>
+<tr>
+<td><code>/news/dive-technologies-qa/</code> 🔴</td>
+<td>dive technologies (320), dive-ld — also in AI Overviews</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/news/noblereach-foundation-tech-force/</code> 🟡</td>
+<td>via /us-tech-force/ redirect</td>
+<td>1</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/news/noblereach-announces-second-class-of-2025-scholars/</code> 🟡</td>
+<td>—</td>
+<td>10</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/news/noblereach-foundation-announces-inaugural-class-of-scholars/</code> 🟡</td>
+<td>—</td>
+<td>9</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/news/noblereach-names-former-senior-commerce-department-official-sree-ramaswamy-as-chief-innovation-officer/</code> ⬜</td>
+<td>—</td>
+<td>6</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/news/noblereach-welcomes-johns-hopkins-applied-physics-laboratory-director-ralph-semmel-and-national-geographic-society-ceo-jill-tiefenthaler-to-its-board-of-directors/</code> ⬜</td>
+<td>ralph semmel (140)</td>
+<td>3</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/news/noblereach-foundation-signs-education-partnership-agreement-with-nsa/</code> 🟡</td>
+<td>nsa agreement (110)</td>
+<td>3</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/news/expanding-horizons-taking-the-noblereach-scholars-program-to-state-and-local-government/</code> ⬜</td>
+<td>—</td>
+<td>3</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/news/noblereach-foundation-announces-board-leadership-changes/</code> ⬜</td>
+<td>—</td>
+<td>1</td>
+<td>Preserve URL exactly</td>
+</tr>
+</tbody></table></div>
+<h3>Program / Section Pages</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Current URL</th>
+<th>Ranks For</th>
+<th>Backlinks</th>
+<th>Action Required</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/talent-opportunities/noblereach-scholars-program/</code> 🔴</td>
+<td>noblereach scholars (90, rank 1), noble scholar (70)</td>
+<td>7</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/talent-opportunities/noblereach-scholars-program/scholars-faq/</code> 🔴</td>
+<td>—</td>
+<td>9</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/talent-opportunities/noblereach-interns/</code> 🟡</td>
+<td>rockefeller foundation internship (260)</td>
+<td>3</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/us-tech-force/</code> 🔴</td>
+<td>tech force (1,900, rank 20), us tech force program (170)</td>
+<td>1</td>
+<td><strong>Create real landing page — currently redirects to press release</strong></td>
+</tr>
+<tr>
+<td><code>/us-coast-guard-internship/</code> 🟡</td>
+<td>coast guard internship (70, rank 8), coast guard internships (70, rank 6)</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/venture-meets-mission/</code> 🟡</td>
+<td>venture meets mission (70, rank 3)</td>
+<td>7</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/innovation/our-work-with-darpa/</code> 🟡</td>
+<td>darpa opportunities (90), darpa work (90)</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/education/curriculum-and-credentialing/</code> 🟡</td>
+<td>innovation for impact (70, rank 6)</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/about-noblereach/noblereach-jobs-internships/</code> 🟡</td>
+<td>noble foundation jobs (30, rank 4), noble foundation careers</td>
+<td>0 direct</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/about-noblereach/team-and-board/</code> ⬜</td>
+<td>—</td>
+<td>1</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/privacy/</code> ⬜</td>
+<td>—</td>
+<td>5</td>
+<td>Preserve URL exactly</td>
+</tr>
+<tr>
+<td><code>/scholars-cohort/</code> ⬜</td>
+<td>—</td>
+<td>1</td>
+<td>Preserve URL exactly</td>
+</tr>
+</tbody></table></div>
+<hr>
+<h2>2. Existing Redirect Chains — Must Persist</h2>
+<p>These 301 redirects are already in place and have accumulated backlinks. The rebuild must carry these forward — do not remove or change the destination.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Old URL (301 source)</th>
+<th>Backlinks</th>
+<th>Ref Domains</th>
+<th>Must Redirect To</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/talent-opportunities/scholars-program/</code></td>
+<td><strong>33</strong></td>
+<td><strong>27</strong></td>
+<td><code>/talent-opportunities/noblereach-scholars-program/</code></td>
+</tr>
+<tr>
+<td><code>/talent-opportunities/scholars-program/scholars-partners/</code></td>
+<td>7</td>
+<td>7</td>
+<td>Closest current partners/about page</td>
+</tr>
+<tr>
+<td><code>/scholars-program/</code></td>
+<td>7</td>
+<td>2</td>
+<td><code>/talent-opportunities/noblereach-scholars-program/</code></td>
+</tr>
+<tr>
+<td><code>/scholars-program/scholars-faq/</code></td>
+<td>5</td>
+<td>4</td>
+<td><code>/talent-opportunities/noblereach-scholars-program/scholars-faq/</code></td>
+</tr>
+<tr>
+<td><code>/academic-partnerships/curriculum/</code></td>
+<td>5</td>
+<td>5</td>
+<td><code>/education/curriculum-and-credentialing/</code></td>
+</tr>
+<tr>
+<td><code>/bringing-emergingtechnologies-to-life/</code></td>
+<td>4</td>
+<td>3</td>
+<td>Closest current program page</td>
+</tr>
+<tr>
+<td><code>/team-and-board/</code></td>
+<td>4</td>
+<td>3</td>
+<td><code>/about-noblereach/team-and-board/</code></td>
+</tr>
+<tr>
+<td><code>/providing-opportunities-for-top-tier-talent/noblereach-interns/</code></td>
+<td>2</td>
+<td>2</td>
+<td><code>/talent-opportunities/noblereach-interns/</code></td>
+</tr>
+<tr>
+<td><code>/talent-opportunities/scholars-program/host-a-scholar/</code></td>
+<td>1</td>
+<td>1</td>
+<td>Closest current host/partner page</td>
+</tr>
+<tr>
+<td><code>/science-to-venture/</code></td>
+<td>3</td>
+<td>3</td>
+<td>Closest current program page</td>
+</tr>
+</tbody></table></div>
+<hr>
+<h2>3. Old Domain Redirect — Critical Infrastructure</h2>
+<blockquote>
+<p>⚠️ <strong>DO NOT REMOVE THIS REDIRECT UNDER ANY CIRCUMSTANCES.</strong></p>
+</blockquote>
+<p><code>noblereachfoundation.org</code> → <code>noblereach.org</code></p>
+<ul>
+<li><strong>55 backlinks</strong> still arrive via this redirect chain</li>
+<li><strong>46 external sites</strong> still use &quot;noblereachfoundation.org&quot; as anchor text</li>
+<li><strong>18 sites</strong> link directly to <code>https://noblereachfoundation.org/</code></li>
+<li>Many .edu domains link to the old domain — these are the most valuable links on the site</li>
+</ul>
+<p>The domain redirect must be maintained at the DNS/hosting level through and after the rebuild. Verify it is still active post-launch.</p>
+<hr>
+<h2>4. SERP Features at Risk</h2>
+<h3>Google AI Overviews</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Page</th>
+<th>Queries</th>
+<th>AI Search Vol</th>
+<th>Risk</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/person/kevin-stitt/</code></td>
+<td>Governor of Oklahoma</td>
+<td>1,300</td>
+<td>URL must be preserved; content about Stitt must remain substantive</td>
+</tr>
+<tr>
+<td><code>/person/general-paul-nakasone-ret/</code></td>
+<td>Paul Nakasone / NSA</td>
+<td>390</td>
+<td>Same as above</td>
+</tr>
+<tr>
+<td><code>/news/dive-technologies-qa/</code></td>
+<td>Dive Technologies / Anduril UUV</td>
+<td>370</td>
+<td>Article must be preserved verbatim; URL must not change</td>
+</tr>
+<tr>
+<td><code>/news/16-innovations-fueled-by-the-federal-government/</code></td>
+<td>Government innovations</td>
+<td>110</td>
+<td>Article must be preserved verbatim</td>
+</tr>
+</tbody></table></div>
+<p>If any of these pages returns a 404 or significantly changes content at launch, AI Overview citations will be lost. Google re-evaluates AI Overview sources continuously.</p>
+<h3>High-Visibility Position 1–2 Rankings</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Page</th>
+<th>Keyword</th>
+<th>Volume</th>
+<th>Risk</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/person/benjamin-claflin/</code></td>
+<td>benjamin claflin</td>
+<td>880</td>
+<td>URL change = immediate ranking loss</td>
+</tr>
+<tr>
+<td><code>/person/arun-gupta/</code></td>
+<td>arun gupta</td>
+<td>720</td>
+<td>URL change = immediate ranking loss</td>
+</tr>
+<tr>
+<td><code>/person/glenn-gaffney/</code></td>
+<td>glenn gaffney, gaffney uap</td>
+<td>480</td>
+<td>URL change = immediate ranking loss</td>
+</tr>
+<tr>
+<td><code>/person/victoria-virasingh/</code></td>
+<td>victoria virasingh</td>
+<td>90</td>
+<td>URL change = immediate ranking loss</td>
+</tr>
+<tr>
+<td><code>/person/sreenivas-sree-ramaswamy/</code></td>
+<td>sree ramaswamy</td>
+<td>50</td>
+<td>URL change = immediate ranking loss</td>
+</tr>
+<tr>
+<td><code>/news/16-innovations-fueled-by-the-federal-government/</code></td>
+<td>government innovations</td>
+<td>90</td>
+<td>Content + URL must be preserved</td>
+</tr>
+<tr>
+<td><code>/talent-opportunities/noblereach-scholars-program/</code></td>
+<td>noblereach scholars</td>
+<td>90</td>
+<td>URL + content must be preserved</td>
+</tr>
+</tbody></table></div>
+<hr>
+<h2>5. Content to Preserve Verbatim</h2>
+<p>The following pages drive organic traffic and/or AI Overview citations. Content must carry over to the new site without significant alteration. URL changes require 301 redirects.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Page</th>
+<th>Reason to Preserve</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/person/kevin-stitt/</code></td>
+<td>Ranks for 6,600 vol &quot;governor of oklahoma&quot; cluster; AI Overview citation</td>
+</tr>
+<tr>
+<td><code>/person/dr-robert-m-gates/</code></td>
+<td>Ranks for 6,600 vol &quot;robert gates&quot; cluster</td>
+</tr>
+<tr>
+<td><code>/person/general-paul-nakasone-ret/</code></td>
+<td>Ranks for 1,600 vol &quot;paul nakasone&quot;; AI Overview citation</td>
+</tr>
+<tr>
+<td><code>/person/anne-neuberger/</code></td>
+<td>Ranks for 1,600 vol &quot;anne neuberger&quot;</td>
+</tr>
+<tr>
+<td><code>/person/pulkit-sharma/</code></td>
+<td>Ranks for 4,400 vol &quot;pulkit sharma&quot;</td>
+</tr>
+<tr>
+<td><code>/stories/founders-fund/</code></td>
+<td>Ranks for 3,600 vol &quot;trae stephens&quot;</td>
+</tr>
+<tr>
+<td><code>/stories/noblereach-emerge-lightdeck/</code></td>
+<td>Ranks for 8,100 vol &quot;lightdeck&quot;</td>
+</tr>
+<tr>
+<td><code>/news/16-innovations-fueled-by-the-federal-government/</code></td>
+<td>37 backlinks; AI Overview citation; 30+ ranking keywords</td>
+</tr>
+<tr>
+<td><code>/news/dive-technologies-qa/</code></td>
+<td>AI Overview citation for defense tech queries</td>
+</tr>
+<tr>
+<td><code>/talent-opportunities/noblereach-scholars-program/</code></td>
+<td>Ranks #1 for branded scholars terms; .edu links point here via old URL redirects</td>
+</tr>
+</tbody></table></div>
+<hr>
+<h2>6. Schema to Implement in Rebuild</h2>
+<p>No structured data currently exists. The rebuild is an opportunity to add schema at the template level — one implementation covers all pages of that type.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Schema Type</th>
+<th>Template</th>
+<th>Priority</th>
+<th>Benefit</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Person</code></td>
+<td>All <code>/person/</code> pages</td>
+<td><strong>High</strong></td>
+<td>Strengthens AI Overview citations; Knowledge Panel eligibility</td>
+</tr>
+<tr>
+<td><code>Article</code></td>
+<td>All <code>/news/</code> and <code>/stories/</code> pages</td>
+<td><strong>High</strong></td>
+<td>Rich result eligibility; AI Overview citation strengthening</td>
+</tr>
+<tr>
+<td><code>Organization</code></td>
+<td>Homepage</td>
+<td><strong>Medium</strong></td>
+<td>Brand Knowledge Panel; logo in SERPs</td>
+</tr>
+<tr>
+<td><code>BreadcrumbList</code></td>
+<td>All pages</td>
+<td><strong>Medium</strong></td>
+<td>Breadcrumb display in SERPs</td>
+</tr>
+<tr>
+<td><code>Book</code></td>
+<td><code>/venture-meets-mission/</code></td>
+<td><strong>Low</strong></td>
+<td>Rich result for book pages</td>
+</tr>
+</tbody></table></div>
+<p>Person schema fields to include: <code>name</code>, <code>jobTitle</code>, <code>description</code>, <code>url</code>, <code>image</code>, <code>sameAs</code> (link to Wikipedia/LinkedIn if available).</p>
+<hr>
+<h2>7. Known Broken Pages — Fix Before or During Rebuild</h2>
+<h3>404 Pages with Active Backlinks (fix immediately — link equity is being lost now)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Broken URL</th>
+<th>Backlinks</th>
+<th>Ref Domains</th>
+<th>Recommended Action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/person/linda-bixby/</code></td>
+<td>8</td>
+<td>7</td>
+<td>Recreate person page OR 301 → <code>/about-noblereach/team-and-board/</code></td>
+</tr>
+<tr>
+<td><code>/person/pasquale-tamburrino/</code></td>
+<td>6</td>
+<td>5</td>
+<td>301 → <code>/person/pat-tamburrino/</code> (existing page)</td>
+</tr>
+<tr>
+<td><code>/person/luiz-camargo/</code></td>
+<td>4</td>
+<td>3</td>
+<td>Recreate person page OR 301 → <code>/about-noblereach/team-and-board/</code></td>
+</tr>
+<tr>
+<td><code>/person/thomas-fewer/</code></td>
+<td>2</td>
+<td>2</td>
+<td>Recreate person page OR 301 → closest replacement</td>
+</tr>
+<tr>
+<td><code>/person/jeremy-joseph/</code></td>
+<td>2</td>
+<td>2</td>
+<td>Recreate person page OR 301 → closest replacement</td>
+</tr>
+<tr>
+<td><code>/jobs/</code></td>
+<td>2</td>
+<td>2</td>
+<td>301 → <code>/about-noblereach/noblereach-jobs-internships/</code></td>
+</tr>
+<tr>
+<td><code>/science-to-venture/</code></td>
+<td>2</td>
+<td>2</td>
+<td>301 → closest current program page</td>
+</tr>
+</tbody></table></div>
+<h3>404 Pages with No Backlinks (clean up during rebuild)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Broken URL</th>
+<th>Recommended Action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/providing-opportunities-for-top-tier-talent/jobs/</code></td>
+<td>301 → <code>/about-noblereach/noblereach-jobs-internships/</code></td>
+</tr>
+<tr>
+<td><code>/talent-opportunities/noblereach-fellows/</code></td>
+<td>301 → closest current program OR 410 if program discontinued</td>
+</tr>
+<tr>
+<td><code>/us-tech-force</code> (no trailing slash)</td>
+<td>301 → <code>/us-tech-force/</code></td>
+</tr>
+<tr>
+<td><code>/about-noblereach/contact-us/</code></td>
+<td>301 → <code>/about-noblereach/</code> or new contact page</td>
+</tr>
+<tr>
+<td><code>/academic-partnerships/academic-partners/</code></td>
+<td>301 → closest current page</td>
+</tr>
+<tr>
+<td><code>/_old-pages/bringing-emergingtechnologies-to-life/</code></td>
+<td>410 Gone (intentionally archived)</td>
+</tr>
+</tbody></table></div>
+<hr>
+<h2>8. Technical Debt to Fix in Rebuild</h2>
+<h3>HubSpot UTM Parameter Pollution (High Priority)</h3>
+<p>HubSpot email campaigns are generating unique indexed URLs via UTM parameters. At least one ranking URL (<code>/stories/noblereach-emerge-lightdeck/</code>) is ranking in Google with the full UTM string in the URL — meaning Google may be splitting ranking signals between the canonical URL and the UTM variant.</p>
+<p><strong>Fix:</strong> Implement canonical tags that point UTM variants to the clean URL. Most CMS platforms and HubSpot configurations support this. Additionally, ensure HubSpot email tracking uses URL fragments (<code>#</code>) or server-side session tracking rather than query parameters for links to canonical content.</p>
+<p>UTM-polluted URLs that have received external backlinks:</p>
+<ul>
+<li><code>/talent-opportunities/scholars-program/?utm_campaign=DC Curated Email...</code> (2 backlinks, 404)</li>
+<li><code>/news/noblereach-announces-second-class-of-2025-scholars/?__hstc=...</code> (1 backlink)</li>
+<li><code>/stories/noblereach-emerge-lightdeck/?utm_source=hs_email...</code> (ranking URL)</li>
+<li>Several other story and news URLs with HubSpot tracking parameters</li>
+</ul>
+<h3>BugHerd Dev Tool on Production (High Priority)</h3>
+<p>Macropod BugHerd (a QA/feedback annotation tool) is loading on all production pages. This contributes to the low Best Practices Lighthouse score (56/100) and adds unnecessary third-party JavaScript to every page load.</p>
+<p><strong>Fix:</strong> Remove BugHerd from production before launch. If needed for pre-launch QA, ensure it is gated behind an environment variable and does not load on the live site.</p>
+<h3>AppNexus Ad Exchange Scripts (Medium Priority)</h3>
+<p>AppNexus (an advertising exchange) scripts are loading on all pages. This is unusual for a nonprofit and likely arrived via GTM or HubSpot configuration. It is a probable contributor to the 56/100 Best Practices score.</p>
+<p><strong>Fix:</strong> Audit GTM tags and HubSpot integrations. Remove AppNexus if not intentionally placed.</p>
+<h3>Missing Meta Descriptions (Medium Priority — Fix in Rebuild Template)</h3>
+<p>8 of 9 audited pages have no meta description. This is a template-level issue — all person pages and story pages are affected. The rebuild should add meta description fields to every page template and populate them at content entry time.</p>
+<h3>Missing H1 Tags on Person Pages (High Priority — Fix in Rebuild Template)</h3>
+<p>All person pages use H5 for the person&#39;s name with no H1. The rebuild should ensure every page template includes exactly one H1 tag containing the primary topic (person name for person pages).</p>
+<h3>Homepage Title Tag (Low Priority)</h3>
+<p>&quot;NobleReach Foundation&quot; (21 chars) is flagged as too short. Consider expanding to include a brief descriptor, e.g. &quot;NobleReach Foundation | Civic Leadership &amp; National Security&quot;.</p>
+<h3>Render-Blocking Resources (Medium Priority)</h3>
+<p>Every page loads 2 render-blocking scripts and 2 render-blocking stylesheets. Google Fonts is the primary candidate — consider self-hosting fonts to eliminate the render-blocking CDN call.</p>
+<h3>Homepage Page Weight: 5.5MB (Medium Priority)</h3>
+<p>The homepage loads 5.5MB of resources. Identify and optimize or lazy-load large images. Target &lt; 2MB for a content-focused homepage.</p>
+</article>  </div> </main> </div> </body></html>

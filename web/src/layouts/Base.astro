@@ -1,0 +1,81 @@
+---
+import '../styles/global.css';
+import { getClients, getClientName, getClientReports, AUDIT_LABELS, AUDIT_ORDER } from '$lib/reports';
+
+interface Props {
+  title: string;
+  client?: string;
+  currentSlug?: string;
+}
+
+const { title, client, currentSlug } = Astro.props;
+
+const clients = getClients();
+const clientReports = client ? getClientReports(client) : [];
+const clientName = client ? getClientName(client) : null;
+
+// Group reports by audit type for sidebar
+const reportsByAuditType: Record<string, typeof clientReports> = {};
+for (const report of clientReports) {
+  if (!reportsByAuditType[report.auditType]) {
+    reportsByAuditType[report.auditType] = [];
+  }
+  reportsByAuditType[report.auditType].push(report);
+}
+
+const auditTypesPresent = AUDIT_ORDER.filter(at => reportsByAuditType[at]?.length > 0);
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{title} — Audit Reports</title>
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="sidebar">
+        <a href="/" class="sidebar-logo">Audit Reports</a>
+        <nav class="sidebar-nav">
+          {client && clientName ? (
+            <>
+              <div class="sidebar-client">Client</div>
+              <div class="sidebar-client-name">{clientName}</div>
+
+              {auditTypesPresent.map(auditType => (
+                <div>
+                  <div class="sidebar-section">{AUDIT_LABELS[auditType] ?? auditType}</div>
+                  {reportsByAuditType[auditType].map(report => (
+                    <a
+                      href={`/${report.client}/${report.slug}/`}
+                      class={`sidebar-link${currentSlug === report.slug ? ' active' : ''}`}
+                    >
+                      {report.title}
+                    </a>
+                  ))}
+                </div>
+              ))}
+            </>
+          ) : (
+            <>
+              <div class="sidebar-client">Clients</div>
+              {clients.map(c => (
+                <a href={`/${c}/`} class="sidebar-client-link">
+                  {getClientName(c)}
+                </a>
+              ))}
+            </>
+          )}
+        </nav>
+      </aside>
+
+      <main class="main">
+        <div class="main-inner">
+          <slot />
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

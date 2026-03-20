@@ -1,0 +1,564 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="robots" content="noindex, nofollow"><title>Report 2: Strategic Baseline — noblereach.org — Audit Reports</title><link rel="stylesheet" href="/_astro/_report_.DwQS7a0K.css"></head> <body> <div class="layout"> <aside class="sidebar"> <a href="/" class="sidebar-logo">Audit Reports</a> <nav class="sidebar-nav">  <div class="sidebar-client">Client</div> <div class="sidebar-client-name">Noble Reach Foundation</div> <div> <div class="sidebar-section">SEO</div> <a href="/noble-reach/01-technical-baseline/" class="sidebar-link"> Report 1: Technical Baseline — noblereach.org </a><a href="/noble-reach/02-strategic-baseline/" class="sidebar-link active"> Report 2: Strategic Baseline — noblereach.org </a><a href="/noble-reach/03-redesign-risk-register/" class="sidebar-link"> Report 3: Redesign Risk Register — noblereach.org </a> </div><div> <div class="sidebar-section">WordPress</div> <a href="/noble-reach/wordpress-audit-report/" class="sidebar-link"> WordPress Audit Report — noblereach.org </a> </div><div> <div class="sidebar-section">Accessibility</div> <a href="/noble-reach/accessibility-audit-report/" class="sidebar-link"> Accessibility Audit Report — noblereach.org </a> </div> </nav> </aside> <main class="main"> <div class="main-inner">  <nav class="report-header"> <a href="/">Reports</a> <span class="sep">/</span> <a href="/noble-reach/">Noble Reach Foundation</a> <span class="sep">/</span> <span class="audit-badge">SEO</span> <span class="sep">/</span> <span>Report 2: Strategic Baseline — noblereach.org</span> </nav> <article class="prose"><h1>Report 2: Strategic Baseline — noblereach.org</h1>
+<p><strong>Audit date:</strong> 2026-03-19
+<strong>Audience:</strong> Dev team performing site rebuild</p>
+<hr>
+<h2>Executive Summary</h2>
+<ul>
+<li>noblereach.org ranks for 270 keywords with ~1,685 estimated monthly organic visits — traffic is highly concentrated on person pages.</li>
+<li>88 keywords currently rank in positions 1–10; all are at immediate risk if URLs change without redirects.</li>
+<li>The backlink profile is exceptionally clean (spam score: 1) with 113 .edu referring domains — this authority took years to build and is the site&#39;s most valuable SEO asset.</li>
+<li>The site appears in Google AI Overviews for 9 queries (~25,470 impressions), primarily through person pages and the &quot;16 innovations&quot; article.</li>
+<li>ChatGPT presence is minimal; AI Overviews via Google is the primary AI search channel.</li>
+<li>The <code>noblereachfoundation.org</code> → <code>noblereach.org</code> redirect chain carries 55+ backlinks and must be preserved indefinitely.</li>
+</ul>
+<hr>
+<h2>1. Keyword Rankings</h2>
+<h3>Position Distribution</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Position Range</th>
+<th>Keywords</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1–3</td>
+<td>22</td>
+<td>Branded + specific person names</td>
+</tr>
+<tr>
+<td>4–10</td>
+<td>66</td>
+<td>High-volume name queries, program pages</td>
+</tr>
+<tr>
+<td>11–20</td>
+<td>59</td>
+<td>Secondary person names, news articles</td>
+</tr>
+<tr>
+<td>21–50</td>
+<td>74</td>
+<td>Long-tail, related queries</td>
+</tr>
+<tr>
+<td>51–100+</td>
+<td>49</td>
+<td>Informational long-tail</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>270</strong></td>
+<td></td>
+</tr>
+</tbody></table></div>
+<p>Estimated monthly organic traffic: <strong>~1,685 visits</strong>
+Estimated paid traffic cost equivalent: <strong>~$300/month</strong></p>
+<p>Full keyword inventory: <code>data/full-keyword-inventory.md</code>
+Top-10 keywords (at-risk): <code>data/top10-keywords.md</code></p>
+<h3>Top Keywords by Search Volume</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Keyword</th>
+<th>Search Volume</th>
+<th>Rank</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>lightdeck</td>
+<td>8,100</td>
+<td>19</td>
+<td><code>/stories/noblereach-emerge-lightdeck/</code> ⚠️ UTM URL</td>
+</tr>
+<tr>
+<td>bob gates / robert gates (cluster)</td>
+<td>6,600</td>
+<td>12–27</td>
+<td><code>/person/dr-robert-m-gates/</code></td>
+</tr>
+<tr>
+<td>governor of oklahoma (cluster)</td>
+<td>6,600</td>
+<td>5–43</td>
+<td><code>/person/kevin-stitt/</code></td>
+</tr>
+<tr>
+<td>defense secretary gates (cluster)</td>
+<td>6,600</td>
+<td>16–27</td>
+<td><code>/person/dr-robert-m-gates/</code></td>
+</tr>
+<tr>
+<td>pulkit sharma</td>
+<td>4,400</td>
+<td>13</td>
+<td><code>/person/pulkit-sharma/</code></td>
+</tr>
+<tr>
+<td>trae stephens</td>
+<td>3,600</td>
+<td>8</td>
+<td><code>/stories/founders-fund/</code></td>
+</tr>
+<tr>
+<td>who is governor of oklahoma (cluster)</td>
+<td>1,600</td>
+<td>5–19</td>
+<td><code>/person/kevin-stitt/</code></td>
+</tr>
+<tr>
+<td>anne neuberger</td>
+<td>1,600</td>
+<td>10</td>
+<td><code>/person/anne-neuberger/</code></td>
+</tr>
+<tr>
+<td>paul nakasone</td>
+<td>1,600</td>
+<td>6</td>
+<td><code>/person/general-paul-nakasone-ret/</code></td>
+</tr>
+<tr>
+<td>tech force</td>
+<td>1,900</td>
+<td>20</td>
+<td><code>/us-tech-force/</code> (redirects)</td>
+</tr>
+<tr>
+<td>current governor of oklahoma</td>
+<td>1,300</td>
+<td>6</td>
+<td><code>/person/kevin-stitt/</code></td>
+</tr>
+<tr>
+<td>ann dunwoody</td>
+<td>880</td>
+<td>8</td>
+<td><code>/person/general-ann-dunwoody/</code></td>
+</tr>
+<tr>
+<td>benjamin claflin</td>
+<td>880</td>
+<td>1</td>
+<td><code>/person/benjamin-claflin/</code></td>
+</tr>
+<tr>
+<td>arun gupta</td>
+<td>720</td>
+<td>1</td>
+<td><code>/person/arun-gupta/</code></td>
+</tr>
+</tbody></table></div>
+<p><strong>Note on lightdeck:</strong> The ranking URL for &quot;lightdeck&quot; (8,100 vol) includes the full HubSpot UTM parameter string in the indexed URL. This means link equity and ranking credit may be split across the canonical URL and the UTM variant.</p>
+<hr>
+<h2>2. Traffic-Driving Pages</h2>
+<p>The following pages are the primary sources of organic traffic, based on keyword rankings and search volume. Person pages dominate.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Page</th>
+<th>Top Keywords</th>
+<th>Est. Monthly Traffic Contribution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/person/kevin-stitt/</code></td>
+<td>governor of oklahoma (cluster, 6,600 vol × multiple ranks)</td>
+<td>~400+</td>
+</tr>
+<tr>
+<td><code>/person/dr-robert-m-gates/</code></td>
+<td>robert gates / bob gates / defense secretary gates</td>
+<td>~300+</td>
+</tr>
+<tr>
+<td><code>/news/16-innovations-fueled-by-the-federal-government/</code></td>
+<td>30+ long-tail innovation queries</td>
+<td>~200+</td>
+</tr>
+<tr>
+<td><code>/stories/noblereach-emerge-lightdeck/</code></td>
+<td>lightdeck (8,100 vol, rank 19)</td>
+<td>~100+</td>
+</tr>
+<tr>
+<td><code>/stories/founders-fund/</code></td>
+<td>trae stephens (3,600 vol, rank 8)</td>
+<td>~100+</td>
+</tr>
+<tr>
+<td><code>/person/general-paul-nakasone-ret/</code></td>
+<td>paul nakasone, nakasone, general nakasone</td>
+<td>~80+</td>
+</tr>
+<tr>
+<td><code>/person/anne-neuberger/</code></td>
+<td>anne neuberger (1,600 vol, rank 10)</td>
+<td>~50+</td>
+</tr>
+<tr>
+<td><code>/person/pulkit-sharma/</code></td>
+<td>pulkit sharma (4,400 vol, rank 13)</td>
+<td>~50+</td>
+</tr>
+<tr>
+<td><code>/person/general-ann-dunwoody/</code></td>
+<td>ann dunwoody cluster</td>
+<td>~50+</td>
+</tr>
+<tr>
+<td><code>/person/arun-gupta/</code></td>
+<td>arun gupta (720 vol, rank 1)</td>
+<td>~40+</td>
+</tr>
+<tr>
+<td><code>/us-tech-force/</code> (via redirect)</td>
+<td>tech force, us tech force program</td>
+<td>~40+</td>
+</tr>
+<tr>
+<td><code>/talent-opportunities/noblereach-scholars-program/</code></td>
+<td>noblereach scholars (90 vol), noble scholar</td>
+<td>~30+</td>
+</tr>
+<tr>
+<td><code>/person/vivek-kundra/</code></td>
+<td>vivek kundra (390 vol, rank 4)</td>
+<td>~25+</td>
+</tr>
+<tr>
+<td><code>/person/glenn-gaffney/</code></td>
+<td>glenn gaffney (480 vol, rank 2), gaffney ufo/uap</td>
+<td>~25+</td>
+</tr>
+<tr>
+<td><code>/stories/iora-health-dr-rushika-fernandopulle/</code></td>
+<td>iora health, rushika fernandopulle</td>
+<td>~20+</td>
+</tr>
+<tr>
+<td><code>/stories/ginkgo-bioworks-tom-knight/</code></td>
+<td>tom knight, ginkgo bioworks founders</td>
+<td>~20+</td>
+</tr>
+<tr>
+<td><code>/stories/coursera-daphne-koller-and-andrew-ng/</code></td>
+<td>coursera founders, who owns coursera</td>
+<td>~20+</td>
+</tr>
+<tr>
+<td><code>/person/dr-jill-tiefenthaler/</code></td>
+<td>ceo national geographic, jill tiefenthaler</td>
+<td>~20+</td>
+</tr>
+<tr>
+<td><code>/person/calvin-yang/</code></td>
+<td>calvin yang (390 vol, rank 3)</td>
+<td>~15+</td>
+</tr>
+<tr>
+<td><code>/stories/james-kanoff-terradot/</code></td>
+<td>terradot, james kanoff</td>
+<td>~15+</td>
+</tr>
+</tbody></table></div>
+<p><strong>Key insight:</strong> The top 3 pages by traffic (Kevin Stitt, Robert Gates, 16 innovations article) likely account for 50%+ of total organic visits.</p>
+<hr>
+<h2>3. Backlink Profile</h2>
+<h3>Summary</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Total backlinks</td>
+<td>640</td>
+</tr>
+<tr>
+<td>Referring domains</td>
+<td>294 (242 unique main domains)</td>
+</tr>
+<tr>
+<td>Domain spam score</td>
+<td>1/100 (very clean)</td>
+</tr>
+<tr>
+<td>Broken backlinks</td>
+<td>28 (17 broken target pages)</td>
+</tr>
+<tr>
+<td>Internal links (sitewide)</td>
+<td>9,507</td>
+</tr>
+<tr>
+<td>External outbound links</td>
+<td>1,294</td>
+</tr>
+<tr>
+<td>Server</td>
+<td>Cloudflare</td>
+</tr>
+<tr>
+<td>Domain first seen</td>
+<td>2022-07-20</td>
+</tr>
+</tbody></table></div>
+<h3>Referring Domain TLD Breakdown</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>TLD</th>
+<th>Count</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>.com</td>
+<td>213</td>
+<td>General commercial</td>
+</tr>
+<tr>
+<td><strong>.edu</strong></td>
+<td><strong>113</strong></td>
+<td><strong>Highest-value — universities and research institutions</strong></td>
+</tr>
+<tr>
+<td>.org</td>
+<td>102</td>
+<td>Nonprofits, associations</td>
+</tr>
+<tr>
+<td>.ac.uk</td>
+<td>27</td>
+<td>UK academic</td>
+</tr>
+<tr>
+<td>.co</td>
+<td>19</td>
+<td>International commercial</td>
+</tr>
+<tr>
+<td>.ai</td>
+<td>18</td>
+<td>Tech/AI companies</td>
+</tr>
+<tr>
+<td>.net</td>
+<td>9</td>
+<td></td>
+</tr>
+<tr>
+<td>.us</td>
+<td>8</td>
+<td></td>
+</tr>
+</tbody></table></div>
+<p><strong>113 .edu referring domains</strong> is the site&#39;s crown jewel. These links point primarily to the Scholars and Emerge program pages. They were built over years through academic partnerships and cannot be easily replaced.</p>
+<h3>Top Referring Domains</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Approx Rank</th>
+<th>Backlinks</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>noblereachfoundation.org</td>
+<td>185</td>
+<td>55</td>
+<td>Old domain — redirects to noblereach.org</td>
+</tr>
+<tr>
+<td>smapply.us</td>
+<td>123</td>
+<td>10</td>
+<td>Scholars application platform</td>
+</tr>
+<tr>
+<td>uchicago.edu</td>
+<td>51</td>
+<td>10</td>
+<td>University of Chicago</td>
+</tr>
+<tr>
+<td>lever.co</td>
+<td>47</td>
+<td>11</td>
+<td>Job posting platform</td>
+</tr>
+<tr>
+<td>northeastern.edu</td>
+<td>—</td>
+<td>1</td>
+<td>Northeastern University</td>
+</tr>
+<tr>
+<td>ucsd.edu</td>
+<td>—</td>
+<td>1</td>
+<td>UC San Diego</td>
+</tr>
+</tbody></table></div>
+<h3>Anchor Text Distribution</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Anchor</th>
+<th>Backlinks</th>
+<th>Referring Domains</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>(empty/image/redirect)</td>
+<td>111</td>
+<td>30</td>
+</tr>
+<tr>
+<td>NobleReach Foundation</td>
+<td>109</td>
+<td>61</td>
+</tr>
+<tr>
+<td>noblereachfoundation.org</td>
+<td>46</td>
+<td>41</td>
+</tr>
+<tr>
+<td>NobleReach Emerge</td>
+<td>38</td>
+<td>10</td>
+</tr>
+<tr>
+<td>NobleReach</td>
+<td>30</td>
+<td>19</td>
+</tr>
+<tr>
+<td>NobleReach Scholars</td>
+<td>19</td>
+<td>11</td>
+</tr>
+<tr>
+<td>noblereach.org</td>
+<td>19</td>
+<td>18</td>
+</tr>
+<tr>
+<td><a href="https://noblereachfoundation.org/">https://noblereachfoundation.org/</a></td>
+<td>18</td>
+<td>13</td>
+</tr>
+<tr>
+<td>NobleReach Scholars program</td>
+<td>12</td>
+<td>8</td>
+</tr>
+<tr>
+<td>Biography</td>
+<td>5</td>
+<td>5 (.edu)</td>
+</tr>
+</tbody></table></div>
+<p><strong>Note:</strong> 46 backlinks still use the anchor &quot;noblereachfoundation.org&quot; and 18 link directly to the old domain URL. These are served by the existing redirect — but they represent historical brand confusion that will only resolve over time.</p>
+<hr>
+<h2>4. AI/LLM Mention Presence</h2>
+<h3>Google AI Overviews</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AI Overview appearances</td>
+<td>9</td>
+</tr>
+<tr>
+<td>AI search volume (queries triggering AIO)</td>
+<td>~2,830</td>
+</tr>
+<tr>
+<td>Estimated AIO impressions</td>
+<td>~25,470</td>
+</tr>
+</tbody></table></div>
+<p><strong>Pages cited in AI Overviews:</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Page</th>
+<th>AI Search Volume</th>
+<th>Context</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/person/kevin-stitt/</code></td>
+<td>1,300</td>
+<td>Governor of Oklahoma queries — co-cited with Wikipedia</td>
+</tr>
+<tr>
+<td><code>/person/general-paul-nakasone-ret/</code></td>
+<td>390</td>
+<td>NSA / Paul Nakasone queries — co-cited with Ballistic Ventures</td>
+</tr>
+<tr>
+<td><code>/news/dive-technologies-qa/</code></td>
+<td>370</td>
+<td>Defense tech / Dive Technologies / Anduril UUV queries</td>
+</tr>
+<tr>
+<td><code>/news/16-innovations-fueled-by-the-federal-government/</code></td>
+<td>110</td>
+<td>Government innovation queries</td>
+</tr>
+</tbody></table></div>
+<p>The AI Overview presence is meaningful but narrow — 4 pages account for all citations. The innovations article is particularly valuable: it earns AI Overview citations despite ranking only in positions 56–95 for many of its keywords.</p>
+<h3>ChatGPT</h3>
+<ul>
+<li>noblereach.org appears in ChatGPT search results for &quot;Michael Thomas CEO&quot; but is not cited in the answer body.</li>
+<li>Minimal ChatGPT presence overall.</li>
+<li>Google AI Overviews is the primary AI search channel for this site.</li>
+</ul>
+<hr>
+<h2>5. SERP Feature Ownership</h2>
+<p>Based on keyword and AI mention data:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Pages</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Google AI Overviews</td>
+<td><code>/person/kevin-stitt/</code>, <code>/person/general-paul-nakasone-ret/</code>, <code>/news/dive-technologies-qa/</code>, <code>/news/16-innovations-fueled-by-the-federal-government/</code></td>
+<td>Active</td>
+</tr>
+<tr>
+<td>Position 1–2 rankings</td>
+<td><code>/person/benjamin-claflin/</code>, <code>/person/arun-gupta/</code>, <code>/news/16-innovations-fueled-by-the-federal-government/</code> (rank 2 for &quot;government innovations&quot;), <code>/person/glenn-gaffney/</code>, <code>/person/victoria-virasingh/</code>, <code>/person/sreenivas-sree-ramaswamy/</code></td>
+<td>Active</td>
+</tr>
+<tr>
+<td>Featured snippets</td>
+<td>Not confirmed — no featured snippet data available in this audit</td>
+<td>Unknown</td>
+</tr>
+<tr>
+<td>Knowledge panels</td>
+<td>Not confirmed</td>
+<td>Unknown</td>
+</tr>
+</tbody></table></div>
+<p>No rich results (review stars, FAQ schema, etc.) are present because the site has no structured data.</p>
+</article>  </div> </main> </div> </body></html>

@@ -492,6 +492,70 @@ body {
   border: 1px solid var(--border);
 }
 
+/* ── Client landing page ─────────────────────────────────────────── */
+
+.client-landing {
+  max-width: 640px;
+}
+
+.client-landing-name {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin-bottom: 2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 3px solid var(--black);
+}
+
+.client-landing-empty {
+  color: var(--text-muted);
+  font-size: 0.9375rem;
+}
+
+.client-landing-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.client-landing-section-label {
+  font-size: 0.5625rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.client-landing-report-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border: 1px solid var(--black);
+}
+
+.client-landing-report-list li {
+  border-bottom: 1px solid var(--border);
+}
+
+.client-landing-report-list li:last-child {
+  border-bottom: none;
+}
+
+.client-landing-report-link {
+  display: block;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  color: var(--text);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  transition: background-color 0.12s;
+}
+
+.client-landing-report-link:hover {
+  background: var(--accent);
+}
+
 /* ── Mobile ──────────────────────────────────────────────────────── */
 
 @media (max-width: 768px) {

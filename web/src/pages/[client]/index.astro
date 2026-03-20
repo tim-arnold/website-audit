@@ -1,5 +1,6 @@
 ---
-import { getClients, getClientReports } from '$lib/reports';
+import Base from '../../layouts/Base.astro';
+import { getClients, getClientName, getClientReports, AUDIT_LABELS, AUDIT_ORDER } from '$lib/reports';
 
 export async function getStaticPaths() {
   const clients = getClients();
@@ -9,12 +10,43 @@ export async function getStaticPaths() {
 }
 
 const { client } = Astro.params;
+const clientName = getClientName(client);
 const reports = getClientReports(client);
-const first = reports[0];
 
-if (first) {
-  return Astro.redirect(`/${client}/${first.slug}/`);
-} else {
-  return Astro.redirect('/');
+const reportsByAuditType: Record<string, typeof reports> = {};
+for (const report of reports) {
+  if (!reportsByAuditType[report.auditType]) {
+    reportsByAuditType[report.auditType] = [];
+  }
+  reportsByAuditType[report.auditType].push(report);
 }
+
+const auditTypesPresent = AUDIT_ORDER.filter(at => reportsByAuditType[at]?.length > 0);
 ---
+
+<Base title={clientName} client={client}>
+  <div class="client-landing">
+    <h1 class="client-landing-name">{clientName}</h1>
+
+    {reports.length === 0 ? (
+      <p class="client-landing-empty">No reports available yet.</p>
+    ) : (
+      <div class="client-landing-sections">
+        {auditTypesPresent.map(auditType => (
+          <div class="client-landing-section">
+            <h2 class="client-landing-section-label">{AUDIT_LABELS[auditType] ?? auditType}</h2>
+            <ul class="client-landing-report-list">
+              {reportsByAuditType[auditType].map(report => (
+                <li>
+                  <a href={`/${client}/${report.slug}/`} class="client-landing-report-link">
+                    {report.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+</Base>

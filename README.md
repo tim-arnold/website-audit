@@ -16,9 +16,10 @@ Each audit type requires different tools to be configured in Claude Code.
 - **DataForSEO MCP** (`dfs-mcp`) — provides SERP data, keyword rankings, backlink analysis, Lighthouse, on-page audits, and AI mention data
 - Configure via the DataForSEO MCP server in Claude Code settings with your API credentials
 
-### WordPress Audit
-- **Local site copy** — a filesystem copy of the WordPress installation (WPEngine local, Local by Flywheel, or similar). Path goes in the client's `CLAUDE.md`.
+### Technology Audit
+- **Local repo/site copy** — a filesystem copy of the codebase (WordPress local, git clone, etc.). Path goes in the client's `CLAUDE.md`.
 - No external API credentials required — the audit is filesystem-only (read-only)
+- Front-end only mode available if no local copy exists (with caveats)
 
 ### Accessibility Audit
 - **Playwright MCP** — browser automation for live page testing, screenshots, keyboard navigation, and accessibility tree inspection

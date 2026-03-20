@@ -154,29 +154,24 @@ fi
 echo ""
 echo "Audits to include:"
 prompt_yn "  SEO audit" "y"           && INCLUDE_SEO=true  || INCLUDE_SEO=false
+prompt_yn "  Technology audit" "y"    && INCLUDE_TECH=true || INCLUDE_TECH=false
 prompt_yn "  Accessibility audit" "y" && INCLUDE_A11Y=true || INCLUDE_A11Y=false
 
-# WordPress audit only offered for WP-based sites
-INCLUDE_WP=false
-WP_AUDIT_MODE=""
-if [[ "$IS_WORDPRESS" == true ]]; then
-  prompt_yn "  WordPress audit" "y" && INCLUDE_WP=true || INCLUDE_WP=false
-fi
-
-if [[ "$INCLUDE_WP" == true ]]; then
+TECH_AUDIT_MODE=""
+if [[ "$INCLUDE_TECH" == true ]]; then
   if [[ "$LOCAL_SITE_PATH" != "N/A" ]]; then
-    WP_AUDIT_MODE="filesystem"
+    TECH_AUDIT_MODE="filesystem"
   else
     echo ""
-    echo "  No local WordPress path provided. Options:"
-    echo "    1) Front-end only — infer from public URL (limited: no theme files, plugins, or DB)"
-    echo "    2) Skip WordPress audit"
+    echo "  No local path provided. Options:"
+    echo "    1) Front-end only — infer from public URL (limited: no source files or DB)"
+    echo "    2) Skip technology audit"
     echo ""
-    read -rp "  Choose [1/2]: " wp_choice
-    case "${wp_choice:-1}" in
-      1) WP_AUDIT_MODE="frontend" ;;
-      2) INCLUDE_WP=false ;;
-      *) WP_AUDIT_MODE="frontend" ;;
+    read -rp "  Choose [1/2]: " tech_choice
+    case "${tech_choice:-1}" in
+      1) TECH_AUDIT_MODE="frontend" ;;
+      2) INCLUDE_TECH=false ;;
+      *) TECH_AUDIT_MODE="frontend" ;;
     esac
   fi
 fi
@@ -195,9 +190,9 @@ echo "  Hosting:         $HOSTING"
 echo "  Local path:      $LOCAL_SITE_PATH"
 echo ""
 echo "  Audits:"
-[[ "$INCLUDE_SEO"  == true ]] && echo "    ✓ SEO"
-[[ "$INCLUDE_WP"   == true ]] && echo "    ✓ WordPress ($WP_AUDIT_MODE$([ "$IS_HEADLESS" == true ] && echo ", headless"))"
-[[ "$INCLUDE_A11Y" == true ]] && echo "    ✓ Accessibility"
+[[ "$INCLUDE_SEO"   == true ]] && echo "    ✓ SEO"
+[[ "$INCLUDE_TECH"  == true ]] && echo "    ✓ Technology ($TECH_AUDIT_MODE$([ "$IS_HEADLESS" == true ] && echo ", headless"))"
+[[ "$INCLUDE_A11Y"  == true ]] && echo "    ✓ Accessibility"
 echo ""
 read -rp "Proceed? [Y/n]: " confirm
 if [[ "${confirm,,}" == "n" ]]; then
@@ -211,7 +206,7 @@ mkdir -p "$CLIENT_DIR"
 cp "$TEMPLATE_DIR/CLAUDE.md" "$CLIENT_DIR/CLAUDE.md"
 
 [[ "$INCLUDE_SEO"  == true ]] && cp -r "$TEMPLATE_DIR/seo-audit"           "$CLIENT_DIR/seo-audit"
-[[ "$INCLUDE_WP"   == true ]] && cp -r "$TEMPLATE_DIR/wordpress-audit"     "$CLIENT_DIR/wordpress-audit"
+[[ "$INCLUDE_TECH" == true ]] && cp -r "$TEMPLATE_DIR/technology-audit"    "$CLIENT_DIR/technology-audit"
 [[ "$INCLUDE_A11Y" == true ]] && cp -r "$TEMPLATE_DIR/accessibility-audit" "$CLIENT_DIR/accessibility-audit"
 
 # ── fill placeholders in CLAUDE.md ─────────────────────────────────────────────
@@ -226,58 +221,97 @@ replace_in_file "$CLAUDE_FILE" "{{CMS}}"                 "$CMS"
 replace_in_file "$CLAUDE_FILE" "{{HOSTING}}"             "$HOSTING"
 replace_in_file "$CLAUDE_FILE" "{{LOCAL_SITE_PATH}}"     "$LOCAL_SITE_PATH"
 
-# ── annotate WordPress HANDOFF ─────────────────────────────────────────────────
+# ── annotate technology HANDOFF ────────────────────────────────────────────────
 
-if [[ "$INCLUDE_WP" == true ]]; then
-  WP_HANDOFF="$CLIENT_DIR/wordpress-audit/HANDOFF.md"
+if [[ "$INCLUDE_TECH" == true ]]; then
+  TECH_HANDOFF="$CLIENT_DIR/technology-audit/HANDOFF.md"
 
-  if [[ "$IS_HEADLESS" == true ]]; then
-    cat >> "$WP_HANDOFF" <<HEADLESSNOTE
+  if [[ "$IS_WORDPRESS" == true ]]; then
+    cat >> "$TECH_HANDOFF" <<'WPNOTE'
 
 ---
 
-## ℹ️ Headless WordPress
+## WordPress-Specific Audit Areas
 
-This site uses WordPress as a headless CMS with a **${FRONTEND_FRAMEWORK}** frontend. The WordPress audit focuses on the backend only — theme rendering is not relevant, but the content model, plugin dependencies, and API structure are.
+In addition to the generic technology audit above, cover these WordPress-specific areas:
 
-**What to focus on:**
-- Custom post types and their REST API exposure (are they in \`show_in_rest: true\`?)
-- ACF field groups and which fields are exposed via the REST API or WPGraphQL
-- Plugin dependencies that affect the API (WPGraphQL, JWT Auth, ACF to REST API, etc.)
-- Any hardcoded API keys or credentials in \`functions.php\` / \`inc/\`
-- Authentication scheme for private content
+### Theme Architecture
+- Active theme: custom, child theme, or off-the-shelf? What templating engine (PHP, Timber/Twig, Blade)?
+- PHP template files and routing logic; any component/partial system
 
-**What to skip:**
-- Template hierarchy (PHP/Twig templates handle nothing — the frontend framework does)
-- Enqueued styles/scripts (frontend handles its own assets)
+### Content Model
+- Custom post types (CPTs): slugs, public/non-public, archive routing
+- Taxonomies per CPT; any configurable slugs stored in options
+- ACF field groups: locations, key field types, flexible content layouts, options pages
+- Are field group definitions version-controlled (JSON) or DB-only?
+
+### Plugins
+For each active plugin: purpose, hard vs. soft dependency, DB-only data (requires export), dev tools to remove.
+Flag especially: form plugins, redirect plugins, SEO plugins, any with custom DB tables.
+
+### Custom Functionality
+Review `functions.php` and `inc/`. Document: CPT/taxonomy registration, custom queries, URL rewrites, API integrations, hardcoded credentials.
+
+### Migration Checklist Additions
+- [ ] Full database export (postmeta, options, term relationships)
+- [ ] ACF field group JSON exports (verify completeness)
+- [ ] Form plugin definitions export (Gravity Forms JSON, etc.)
+- [ ] Redirect plugin rules export (JSON)
+- [ ] Yoast/RankMath SEO meta (in DB export — flag if migrating off WP)
+- [ ] ACF options page values (CPT slugs, GTM ID, global settings)
+- [ ] Media library (`wp-content/uploads/`)
+- [ ] Any plugin-specific custom DB tables (forms, maps, etc.)
+
+WPNOTE
+  fi
+
+  if [[ "$IS_HEADLESS" == true ]]; then
+    cat >> "$TECH_HANDOFF" <<HEADLESSNOTE
+
+---
+
+## Headless WordPress Notes
+
+This site uses WordPress as a headless CMS with a **${FRONTEND_FRAMEWORK}** frontend. Theme rendering is not relevant — focus on the backend data model and API.
+
+**Additional focus areas:**
+- CPT REST API exposure (\`show_in_rest: true\`?)
+- ACF fields exposed via REST API or WPGraphQL
+- API-specific plugins (WPGraphQL, JWT Auth, ACF to REST API, etc.)
+- Authentication scheme for private/preview content
+- How the frontend consumes the WP API (fetch patterns, preview mode, ISR/SSG)
+
+**Skip:**
+- Template hierarchy and Twig/PHP rendering
+- Enqueued styles/scripts (frontend manages its own assets)
 
 HEADLESSNOTE
   fi
 
-  if [[ "$WP_AUDIT_MODE" == "frontend" ]]; then
-    cat >> "$WP_HANDOFF" <<'FRONTENDNOTE'
+  if [[ "$TECH_AUDIT_MODE" == "frontend" ]]; then
+    cat >> "$TECH_HANDOFF" <<'FRONTENDNOTE'
 
 ---
 
 ## ⚠️ Front-End Only Mode
 
-No local filesystem copy was available at setup time. This audit is limited to what can be inferred from the public URL.
+No local path was available at setup time. This audit is limited to what can be inferred from the public URL and HTML source.
 
 **What you can still assess:**
-- HTML source: template structure, heading hierarchy, meta tags, schema markup
-- Public URLs and redirects
-- Third-party scripts loaded on the page (GTM, analytics, ad platforms)
-- Publicly visible content model (URL patterns, page types, taxonomy URLs)
+- HTML source: framework fingerprints, meta tags, schema markup, script inventory
+- Public URL structure and redirects
+- Third-party scripts (GTM, analytics, ad platforms, integrations)
+- Publicly visible content model (URL patterns, page types)
+- Network requests (API calls, CDN assets, third-party resources)
 
-**What you cannot assess without filesystem access:**
-- Plugin inventory and versions
-- Theme architecture (PHP templates, Timber/Twig, etc.)
-- ACF field groups and the full content model
-- Custom functions, hooks, and URL rewrites
+**What you cannot assess without source access:**
+- Dependency inventory and versions
+- Build configuration and environment variables
+- Server-side logic, API routes, custom middleware
 - Hardcoded credentials or dev tools in source files
-- Non-public CPTs (`action`, `resource`, etc.)
+- Non-public content types or admin-only functionality
 
-**Recommendation:** Flag any gaps clearly in the report. If a local copy becomes available later, re-run the filesystem pass and supplement the report.
+**Recommendation:** Flag gaps clearly in the report. If source access becomes available, supplement with a filesystem pass.
 
 FRONTENDNOTE
   fi

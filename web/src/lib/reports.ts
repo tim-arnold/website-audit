@@ -10,11 +10,12 @@ const CLIENTS_DIR = join(REPO_ROOT, 'clients');
 
 export const AUDIT_LABELS: Record<string, string> = {
   'seo-audit': 'SEO',
-  'wordpress-audit': 'WordPress',
+  'technology-audit': 'Technology',
+  'wordpress-audit': 'WordPress', // legacy: noble-reach predates rename
   'accessibility-audit': 'Accessibility',
 };
 
-export const AUDIT_ORDER = ['seo-audit', 'wordpress-audit', 'accessibility-audit'];
+export const AUDIT_ORDER = ['seo-audit', 'technology-audit', 'wordpress-audit', 'accessibility-audit'];
 
 export interface Report {
   client: string;

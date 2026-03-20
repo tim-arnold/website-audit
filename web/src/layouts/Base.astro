@@ -37,7 +37,13 @@ const auditTypesPresent = AUDIT_ORDER.filter(at => reportsByAuditType[at]?.lengt
   <body>
     <div class="layout">
       <aside class="sidebar">
-        <a href="/" class="sidebar-logo">Audit Reports</a>
+        <a href="/" class="sidebar-logo">
+          <span class="sidebar-logo-mark"></span>
+          <span class="sidebar-logo-text">
+            Outright
+            <span class="sidebar-logo-sub">Client Audits</span>
+          </span>
+        </a>
         <nav class="sidebar-nav">
           {client && clientName ? (
             <>

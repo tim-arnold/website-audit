@@ -428,61 +428,87 @@ body {
 .index-subheading {
   color: var(--text-muted);
   font-size: 0.9375rem;
+  margin-bottom: 1.25rem;
+}
+
+.index-intro {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+  padding: 1rem 1.25rem;
+  border-left: 3px solid var(--accent);
+  background: #f9ffe8;
   margin-bottom: 2rem;
+  max-width: 600px;
 }
 
-.client-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1px;
+.index-intro p + p {
+  margin-top: 0.5rem;
+}
+
+.index-intro code {
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.8125rem;
+  background: rgba(0,0,0,0.06);
+  border-radius: 3px;
+  padding: 0.1em 0.35em;
+}
+
+.client-list {
   border: 1px solid var(--black);
-  background: var(--black);
+  max-width: 600px;
 }
 
-.client-card {
-  display: block;
-  padding: 1.5rem;
+.client-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.875rem 1rem;
   text-decoration: none;
   color: inherit;
+  border-bottom: 1px solid var(--border);
   transition: background-color 0.12s;
-  background: var(--white);
 }
 
-.client-card:hover {
+.client-row:last-child {
+  border-bottom: none;
+}
+
+.client-row:hover {
   background: var(--accent);
 }
 
-.client-card-name {
-  font-size: 1.0625rem;
-  font-weight: 800;
+.client-row-name {
+  font-size: 0.9375rem;
+  font-weight: 700;
   color: var(--text);
-  margin-bottom: 0.25rem;
-  letter-spacing: -0.01em;
+  flex: 1;
+  min-width: 0;
 }
 
-.client-card-slug {
+.client-row-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.client-row-slug {
   font-size: 0.75rem;
   color: var(--text-muted);
   font-family: 'SFMono-Regular', Consolas, monospace;
-  margin-bottom: 0.875rem;
 }
 
-.client-card-reports {
-  font-size: 0.8125rem;
+.client-row-count {
+  font-size: 0.75rem;
   color: var(--text-muted);
+  white-space: nowrap;
 }
 
-.client-card-reports strong {
-  color: var(--text);
-  font-weight: 600;
-}
-
-.client-card-arrow {
-  display: inline-block;
-  margin-top: 0.875rem;
-  font-size: 0.8125rem;
-  font-weight: 700;
-  color: var(--black);
+.client-row-arrow {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
 }
 
 .empty-state {

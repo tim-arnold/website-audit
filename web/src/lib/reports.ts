@@ -13,9 +13,10 @@ export const AUDIT_LABELS: Record<string, string> = {
   'technology-audit': 'Technology',
   'wordpress-audit': 'WordPress', // legacy: noble-reach predates rename
   'accessibility-audit': 'Accessibility',
+  'analytics-audit': 'Analytics',
 };
 
-export const AUDIT_ORDER = ['seo-audit', 'technology-audit', 'wordpress-audit', 'accessibility-audit'];
+export const AUDIT_ORDER = ['seo-audit', 'technology-audit', 'wordpress-audit', 'accessibility-audit', 'analytics-audit'];
 
 export interface Report {
   client: string;

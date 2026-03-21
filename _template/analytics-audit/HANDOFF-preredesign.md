@@ -17,6 +17,50 @@ The goal is to establish a complete analytics baseline before the site rebuild b
 
 ---
 
+## Prerequisites: Google Analytics MCP
+
+Before running this audit, verify the Google Analytics MCP is connected: run `/mcp` in Claude Code and look for `analytics-mcp` with a green status.
+
+If it's missing, complete this one-time setup:
+
+### 1. Install dependencies
+
+```bash
+brew install --cask google-cloud-sdk
+brew install pipx && pipx ensurepath
+pipx install analytics-mcp
+```
+
+### 2. Create a GCP project and enable the Analytics APIs
+
+```bash
+gcloud auth login
+gcloud projects create analytics-mcp-project --name="Analytics MCP"
+gcloud config set project analytics-mcp-project
+gcloud services enable analyticsdata.googleapis.com analyticsadmin.googleapis.com
+```
+
+> To reuse an existing GCP project, skip `projects create` and just run `gcloud config set project YOUR_PROJECT_ID`.
+
+### 3. Authenticate
+
+```bash
+gcloud auth application-default login \
+  --scopes=https://www.googleapis.com/auth/analytics.readonly,https://www.googleapis.com/auth/cloud-platform
+```
+
+A browser window will open — log in with the Google account that has access to the GA4 property.
+
+### 4. Register the MCP with Claude Code
+
+```bash
+claude mcp add analytics-mcp -s user -- pipx run analytics-mcp
+```
+
+Restart Claude Code and confirm `analytics-mcp` appears in `/mcp` before proceeding.
+
+---
+
 ## Step 1: Read Context
 
 1. Read `../CLAUDE.md` — note the public URL and any relevant platform details.

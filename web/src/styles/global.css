@@ -582,6 +582,35 @@ body {
   background: var(--accent);
 }
 
+/* ── Outright-only nav links (require @weareoutright.com Zero Trust auth) ── */
+
+.outright-nav-link {
+  pointer-events: none;
+  cursor: default;
+  text-decoration: none;
+  color: inherit;
+}
+
+body.outright-authed .outright-nav-link {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* Sidebar logo link */
+body.outright-authed .sidebar-logo.outright-nav-link:hover {
+  opacity: 0.8;
+}
+
+/* Breadcrumb client name link */
+.report-header .outright-nav-link {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+body.outright-authed .report-header .outright-nav-link:hover {
+  color: var(--black);
+}
+
 /* ── Mobile ──────────────────────────────────────────────────────── */
 
 @media (max-width: 768px) {

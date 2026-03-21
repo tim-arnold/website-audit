@@ -70,7 +70,7 @@ const auditLabel = AUDIT_LABELS[report.auditType] ?? report.auditType;
 
 <Base title={report.title} client={report.client} currentSlug={report.slug}>
   <nav class="report-header">
-    <span>{report.clientName}</span>
+    <a href={`/${report.client}/`} class="outright-nav-link">{report.clientName}</a>
     <span class="sep">/</span>
     <span class="audit-badge">{auditLabel}</span>
     <span class="sep">/</span>

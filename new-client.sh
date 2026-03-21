@@ -99,9 +99,20 @@ esac
 
 echo ""
 echo "Audits to include:"
-prompt_yn "  SEO audit" "y"           && INCLUDE_SEO=true  || INCLUDE_SEO=false
-prompt_yn "  Technology audit" "y"    && INCLUDE_TECH=true || INCLUDE_TECH=false
-prompt_yn "  Accessibility audit" "y" && INCLUDE_A11Y=true || INCLUDE_A11Y=false
+prompt_yn "  SEO audit" "y"           && INCLUDE_SEO=true      || INCLUDE_SEO=false
+prompt_yn "  Technology audit" "y"    && INCLUDE_TECH=true     || INCLUDE_TECH=false
+prompt_yn "  Accessibility audit" "y" && INCLUDE_A11Y=true     || INCLUDE_A11Y=false
+prompt_yn "  Analytics audit" "y"     && INCLUDE_ANALYTICS=true || INCLUDE_ANALYTICS=false
+
+# ── analytics audit details (only if selected) ──────────────────────────────────
+
+GA4_PROPERTY_ID=""
+
+if [[ "$INCLUDE_ANALYTICS" == true ]]; then
+  echo ""
+  read -rp "  GA4 Property ID (press Enter to skip): " GA4_PROPERTY_ID_INPUT
+  GA4_PROPERTY_ID="${GA4_PROPERTY_ID_INPUT:-}"
+fi
 
 # ── technology audit details (only if selected) ─────────────────────────────────
 
@@ -217,9 +228,10 @@ echo "  Previous domain: $PREVIOUS_DOMAIN"
 [[ "$INCLUDE_TECH" == true ]] && echo "  Local path:      $LOCAL_SITE_PATH"
 echo ""
 echo "  Audits:"
-[[ "$INCLUDE_SEO"  == true ]] && echo "    ✓ SEO"
-[[ "$INCLUDE_TECH" == true ]] && echo "    ✓ Technology ($TECH_AUDIT_MODE$([ "$IS_HEADLESS" == true ] && echo ", headless"))"
-[[ "$INCLUDE_A11Y" == true ]] && echo "    ✓ Accessibility"
+[[ "$INCLUDE_SEO"       == true ]] && echo "    ✓ SEO"
+[[ "$INCLUDE_TECH"      == true ]] && echo "    ✓ Technology ($TECH_AUDIT_MODE$([ "$IS_HEADLESS" == true ] && echo ", headless"))"
+[[ "$INCLUDE_A11Y"      == true ]] && echo "    ✓ Accessibility"
+[[ "$INCLUDE_ANALYTICS" == true ]] && echo "    ✓ Analytics$([ -n "$GA4_PROPERTY_ID" ] && echo " (GA4: $GA4_PROPERTY_ID)" || echo " (no property ID provided)")"
 echo ""
 read -rp "Proceed? [Y/n]: " confirm
 if [[ "${confirm,,}" == "n" ]]; then
@@ -246,6 +258,16 @@ if [[ "$INCLUDE_A11Y" == true ]]; then
   cp -r "$TEMPLATE_DIR/accessibility-audit" "$CLIENT_DIR/accessibility-audit"
   rm -f "$CLIENT_DIR/accessibility-audit/HANDOFF-"*.md
   cp "$TEMPLATE_DIR/accessibility-audit/HANDOFF-${AUDIT_PURPOSE}.md" "$CLIENT_DIR/accessibility-audit/HANDOFF.md"
+fi
+if [[ "$INCLUDE_ANALYTICS" == true ]]; then
+  cp -r "$TEMPLATE_DIR/analytics-audit" "$CLIENT_DIR/analytics-audit"
+  rm -f "$CLIENT_DIR/analytics-audit/HANDOFF-"*.md
+  cp "$TEMPLATE_DIR/analytics-audit/HANDOFF-${AUDIT_PURPOSE}.md" "$CLIENT_DIR/analytics-audit/HANDOFF.md"
+  # Write .env.local (gitignored) with GA4 property ID
+  {
+    echo "# Analytics credentials — do not commit"
+    echo "GA4_PROPERTY_ID=${GA4_PROPERTY_ID}"
+  } > "$CLIENT_DIR/.env.local"
 fi
 
 # ── fill placeholders in CLAUDE.md ─────────────────────────────────────────────

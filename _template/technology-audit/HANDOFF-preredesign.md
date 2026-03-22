@@ -29,9 +29,11 @@ If a local path is available in `../CLAUDE.md`, use it as the primary source. If
 ### 2. Dependencies
 
 If a local repo is available:
-- Review `package.json`, `composer.json`, or equivalent. Note major dependencies and their versions.
-- Flag anything outdated, abandoned, or carrying known security issues.
-- Identify any hardcoded API keys or credentials in source files — flag these for rotation.
+- Review `package.json`, `composer.json`, or equivalent. List major dependencies and their current versions.
+- Note anything significantly behind current major versions or that appears abandoned (no releases in 2+ years).
+- Note whether a lockfile is present and committed.
+
+> Security evaluation of these dependencies (CVE scanning, hardcoded credentials) is covered in the security audit.
 
 ### 3. Content Model
 

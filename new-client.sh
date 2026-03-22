@@ -53,6 +53,181 @@ replace_in_file() {
   sed -i '' "s|${placeholder}|${value}|g" "$file"
 }
 
+# ── add-audit mode ─────────────────────────────────────────────────────────────
+
+if [[ "${1:-}" == "--add-audit" ]]; then
+
+  # All known audit types (parallel arrays, bash 3 compatible)
+  AUDIT_LABELS=("SEO" "Technology" "Accessibility" "Analytics" "Security")
+  AUDIT_DIRS=("seo-audit" "technology-audit" "accessibility-audit" "analytics-audit" "security-audit")
+  AUDIT_STATUS_KEYS=("SEO" "Technology" "Accessibility" "Analytics" "Security")
+
+  # Insert a "- Label audit: planned" line after the last existing audit status line
+  add_audit_status_line() {
+    local file="$1"
+    local label="$2"
+    local new_line="- ${label} audit: planned"
+    grep -q "^- ${label} audit:" "$file" && return
+    awk -v line="$new_line" '
+      /^- .* audit:/ { last = NR }
+      { lines[NR] = $0 }
+      END {
+        for (i = 1; i <= NR; i++) {
+          print lines[i]
+          if (i == last) print line
+        }
+      }
+    ' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
+  }
+
+  echo ""
+  echo "Add audit to existing client"
+  echo "────────────────────────────"
+
+  # List existing clients
+  echo ""
+  echo "Existing clients:"
+  for d in "$CLIENTS_DIR"/*/; do
+    [[ -d "$d" ]] && echo "  $(basename "$d")"
+  done
+  echo ""
+
+  SLUG=$(prompt "Client slug")
+  CLIENT_DIR="$CLIENTS_DIR/$SLUG"
+
+  if [[ ! -d "$CLIENT_DIR" ]]; then
+    echo "Error: clients/$SLUG does not exist." >&2
+    exit 1
+  fi
+
+  # Detect audit purpose from existing CLAUDE.md
+  AUDIT_PURPOSE="preredesign"
+  AUDIT_PURPOSE_LABEL="Pre-Redesign"
+  if grep -qi "remediation" "$CLIENT_DIR/CLAUDE.md" 2>/dev/null; then
+    AUDIT_PURPOSE="remediation"
+    AUDIT_PURPOSE_LABEL="Remediation"
+  fi
+
+  # Show status for each known audit type
+  echo ""
+  echo "Audit status for $SLUG ($AUDIT_PURPOSE_LABEL):"
+  echo ""
+
+  MISSING_LABELS=()
+  MISSING_DIRS=()
+  MISSING_STATUS_KEYS=()
+
+  for i in "${!AUDIT_LABELS[@]}"; do
+    label="${AUDIT_LABELS[$i]}"
+    dir="${AUDIT_DIRS[$i]}"
+    if [[ -d "$CLIENT_DIR/$dir" ]]; then
+      report_count=$(find "$CLIENT_DIR/$dir/reports" -type f ! -name '.gitkeep' 2>/dev/null | wc -l | tr -d ' ')
+      if [[ "$report_count" -gt 0 ]]; then
+        echo "  ✓ $label audit — complete"
+      else
+        echo "  ✓ $label audit — scaffolded, not yet run"
+      fi
+    else
+      echo "  · $label audit — not created"
+      MISSING_LABELS+=("$label")
+      MISSING_DIRS+=("$dir")
+      MISSING_STATUS_KEYS+=("${AUDIT_STATUS_KEYS[$i]}")
+    fi
+  done
+
+  if [[ ${#MISSING_LABELS[@]} -eq 0 ]]; then
+    echo ""
+    echo "All audit types are already created for this client."
+    exit 0
+  fi
+
+  # Prompt for which missing audits to add
+  echo ""
+  echo "Audits to add:"
+
+  SELECTED_LABELS=()
+  SELECTED_DIRS=()
+  SELECTED_STATUS_KEYS=()
+
+  for i in "${!MISSING_LABELS[@]}"; do
+    label="${MISSING_LABELS[$i]}"
+    dir="${MISSING_DIRS[$i]}"
+    if prompt_yn "  $label audit" "y"; then
+      SELECTED_LABELS+=("$label")
+      SELECTED_DIRS+=("$dir")
+      SELECTED_STATUS_KEYS+=("${MISSING_STATUS_KEYS[$i]}")
+    fi
+  done
+
+  if [[ ${#SELECTED_LABELS[@]} -eq 0 ]]; then
+    echo ""
+    echo "Nothing selected. Aborted."
+    exit 0
+  fi
+
+  # Analytics: ask for GA4 property ID if selected and .env.local doesn't exist
+  GA4_PROPERTY_ID=""
+  for label in "${SELECTED_LABELS[@]}"; do
+    if [[ "$label" == "Analytics" && ! -f "$CLIENT_DIR/.env.local" ]]; then
+      echo ""
+      read -rp "  GA4 Property ID (press Enter to skip): " GA4_PROPERTY_ID_INPUT
+      GA4_PROPERTY_ID="${GA4_PROPERTY_ID_INPUT:-}"
+    fi
+  done
+
+  # Confirm
+  echo ""
+  echo "Adding to clients/$SLUG/:"
+  for label in "${SELECTED_LABELS[@]}"; do
+    echo "  + $label audit"
+  done
+  echo ""
+  read -rp "Proceed? [Y/n]: " confirm
+  if [[ "${confirm,,}" == "n" ]]; then
+    echo "Aborted."
+    exit 0
+  fi
+
+  # Create selected audits
+  for i in "${!SELECTED_LABELS[@]}"; do
+    label="${SELECTED_LABELS[$i]}"
+    dir="${SELECTED_DIRS[$i]}"
+    status_key="${SELECTED_STATUS_KEYS[$i]}"
+    tmpl_dir="$TEMPLATE_DIR/$dir"
+
+    if [[ ! -d "$tmpl_dir" ]]; then
+      echo "Warning: template not found at $tmpl_dir — skipping $label audit." >&2
+      continue
+    fi
+
+    cp -r "$tmpl_dir" "$CLIENT_DIR/$dir"
+    rm -f "$CLIENT_DIR/$dir/HANDOFF-"*.md
+
+    if [[ -f "$tmpl_dir/HANDOFF-${AUDIT_PURPOSE}.md" ]]; then
+      cp "$tmpl_dir/HANDOFF-${AUDIT_PURPOSE}.md" "$CLIENT_DIR/$dir/HANDOFF.md"
+    elif [[ -f "$tmpl_dir/HANDOFF.md" ]]; then
+      cp "$tmpl_dir/HANDOFF.md" "$CLIENT_DIR/$dir/HANDOFF.md"
+    fi
+
+    # Analytics: write .env.local if not already present
+    if [[ "$label" == "Analytics" && ! -f "$CLIENT_DIR/.env.local" ]]; then
+      {
+        echo "# Analytics credentials — do not commit"
+        echo "GA4_PROPERTY_ID=${GA4_PROPERTY_ID}"
+      } > "$CLIENT_DIR/.env.local"
+    fi
+
+    # Update CLAUDE.md audit status section
+    add_audit_status_line "$CLIENT_DIR/CLAUDE.md" "$status_key"
+
+    echo "  Created $dir/"
+  done
+
+  echo ""
+  echo "Done. Review clients/$SLUG/ to verify."
+  exit 0
+fi
+
 # ── client basics ───────────────────────────────────────────────────────────────
 
 echo ""

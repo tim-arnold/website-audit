@@ -26,17 +26,18 @@ If a local path is available in `../CLAUDE.md`, use it as the primary source. If
 - What is the build and deployment pipeline? Are there CI/CD gaps?
 - How are environment variables and secrets managed?
 
-### 2. Dependencies and Security
+### 2. Dependencies
 
 If a local repo is available:
-- Review `package.json`, `composer.json`, or equivalent.
-- Flag anything outdated, abandoned, or carrying known CVEs.
-- Check for hardcoded API keys or credentials in source files — these must be rotated immediately.
-- Note any packages that are significantly behind current major versions.
+- Review `package.json`, `composer.json`, or equivalent. List major dependencies and their current versions.
+- Note anything significantly behind current major versions or that appears abandoned (no releases in 2+ years).
+- Note whether a lockfile is present and committed.
 
 If only the live site is available:
 - Inspect response headers and HTML source for framework fingerprints and version hints.
 - Flag any technology that is known EOL based on what can be inferred.
+
+> Security evaluation of these dependencies (CVE scanning, hardcoded credentials) is covered in the security audit.
 
 ### 3. Content and Data Model
 

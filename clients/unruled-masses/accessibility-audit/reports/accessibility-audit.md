@@ -1,4 +1,4 @@
-# Unruled Masses — Accessibility Audit Report
+# Accessibility Audit: Browser Testing — Unruled Masses
 
 **Site:** https://unruledmasses.org
 **Date:** 2026-03-22

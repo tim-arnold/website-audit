@@ -1,4 +1,4 @@
-# Outright — Technology Audit Report
+# Technology Audit Report — Outright
 
 **Date:** 2026-03-23
 **Site:** https://weareoutright.com

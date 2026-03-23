@@ -1,4 +1,4 @@
-# Noble Reach Foundation — Security Audit Report
+# Security Audit Report — Noble Reach Foundation
 
 **Date:** 2026-03-23
 **Site:** https://noblereach.org

@@ -1,8 +1,9 @@
 # Performance Baseline — Ocean Conservancy
 
-**Collected:** 2026-02-13
+**Collected:** 2026-02-20 (top 20 pages); 2026-02-13 (homepage initial)
 **URL:** https://oceanconservancy.org
 **Lighthouse version:** 13.0.1
+**GA4 window:** November 2025 – February 2026 (90 days)
 **Mobile emulation:** Moto G Power, Slow 4G
 
 ---

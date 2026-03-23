@@ -1,12 +1,14 @@
 # Site Audit Framework
 
-Pre-redesign audits for Outright clients. Each client lives in `clients/<slug>/`.
+Pre-redesign and remediation audits across multiple clients. Each client lives in `clients/<slug>/`.
 
 ## Clients
 
-| Client | URL | Status |
-|---|---|---|
-| noble-reach | https://noblereach.org | SEO ✓ · WordPress ✓ · Accessibility ✓ |
+| Client | URL | Type | Status |
+|---|---|---|---|
+| noble-reach | https://noblereach.org | Pre-redesign | SEO ✓ · WordPress ✓ · Accessibility ✓ |
+| outright | https://weareoutright.com | Remediation | SEO ✓ · Technology ✓ |
+| unruled-masses | https://unruledmasses.org | Remediation | SEO ✓ · Technology ✓ · Accessibility ✓ · Analytics ✓ · Security ✓ |
 
 ## Audit Dependencies
 
@@ -20,6 +22,16 @@ Each audit type requires different tools to be configured in Claude Code.
 - **Local repo/site copy** — a filesystem copy of the codebase (WordPress local, git clone, etc.). Path goes in the client's `CLAUDE.md`.
 - No external API credentials required — the audit is filesystem-only (read-only)
 - Front-end only mode available if no local copy exists (with caveats)
+
+### Analytics Audit
+- **Google Analytics MCP** (`analytics-mcp`) — GA4 data: traffic, behavior, conversions, data quality checks
+- **GA4 Property ID** — store in the client's `.env.local` (gitignored) as `GA4_PROPERTY_ID`
+- Setup: `pipx install analytics-mcp` + `gcloud auth application-default login` + `claude mcp add analytics-mcp -s user -- pipx run analytics-mcp`
+
+### Security Audit
+- **Local repo/site copy** — for dependency scanning and credential checks
+- **Playwright MCP** — for live site header and TLS inspection
+- No additional API credentials required beyond what other audits use
 
 ### Accessibility Audit
 - **Playwright MCP** — browser automation for live page testing, screenshots, keyboard navigation, and accessibility tree inspection

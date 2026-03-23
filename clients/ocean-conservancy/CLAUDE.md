@@ -16,7 +16,7 @@ Remediation audit for **http://oceanconservancy.org**. The goal is to identify a
 ## Audit Status
 
 - SEO audit: planned
-- Technology audit: planned
+- Technology audit: **complete** — data and reports in `technology-audit/`
 - Accessibility audit: planned
 - Analytics audit: planned
 - Security audit: planned

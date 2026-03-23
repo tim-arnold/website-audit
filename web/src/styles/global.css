@@ -163,7 +163,7 @@ body {
   text-decoration: underline;
   text-decoration-color: rgba(255, 255, 255, 0.25);
   text-underline-offset: 2px;
-  transition: color 0.15s, text-decoration-color 0.15s, background-color 0.15s, padding-left 0.15s;
+  transition: color 0.15s, text-decoration-color 0.15s, background-color 0.15s;
   line-height: 1.4;
 }
 
@@ -171,7 +171,6 @@ body {
   color: var(--accent);
   text-decoration-color: var(--accent);
   background-color: rgba(203, 254, 69, 0.07);
-  padding-left: 1.875rem;
 }
 
 .sidebar-link.active {

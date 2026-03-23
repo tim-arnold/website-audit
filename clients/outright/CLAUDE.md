@@ -16,9 +16,9 @@ Remediation audit for **https://weareoutright.com**. The goal is to identify and
 ## Audit Status
 
 - SEO audit: complete
-- Technology audit: planned
+- Technology audit: complete
 - Accessibility audit: planned
-- Analytics audit: planned
+- Analytics audit: in progress
 - Security audit: planned
 
 ## Tools Available

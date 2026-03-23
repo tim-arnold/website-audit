@@ -85,25 +85,41 @@ Output goes to `web/dist/`. Deployed automatically by Cloudflare Pages on push t
 clients/
   <client-slug>/
     CLAUDE.md                    ← client context (URL, CMS, local path, status)
+    .env.local                   ← GA4 property ID and other secrets (gitignored)
     seo-audit/
       data/                      ← raw collected data
       reports/                   ← final deliverable reports
-    wordpress-audit/
+    technology-audit/
       data/
       reports/
     accessibility-audit/
       data/
       reports/
       screenshots/
+    analytics-audit/
+      data/
+      reports/
+    security-audit/
+      data/
+      reports/
+    wordpress-audit/             ← WordPress-only clients
+      data/
+      reports/
 
-_template/                       ← copied by new-client.sh
+_template/                       ← copied by new-client.sh; each audit type has
+  <audit-type>/                    HANDOFF-preredesign.md and HANDOFF-remediation.md
+  CLAUDE.md
+
 web/                             ← Astro report viewer
   src/
     lib/reports.ts               ← reads clients/*/reports/*.md at build time
     pages/                       ← [client]/[report] dynamic routes
     layouts/
     styles/
-  package.json
   astro.config.mjs
-  wrangler.toml                  ← Cloudflare Workers static asset config
+  wrangler.toml                  ← Cloudflare Pages config
+
+wrangler.toml                    ← root-level Cloudflare config
+new-client.sh                    ← scaffold new client or add audit to existing one
+CLAUDE.md                        ← project-level instructions for Claude Code
 ```

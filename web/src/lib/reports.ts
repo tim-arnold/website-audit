@@ -12,12 +12,13 @@ export const AUDIT_LABELS: Record<string, string> = {
   'seo-audit': 'SEO',
   'technology-audit': 'Technology',
   'wordpress-audit': 'WordPress', // legacy: noble-reach predates rename
+  'performance-audit': 'Performance',
   'accessibility-audit': 'Accessibility',
   'analytics-audit': 'Analytics',
   'security-audit': 'Security',
 };
 
-export const AUDIT_ORDER = ['seo-audit', 'technology-audit', 'wordpress-audit', 'accessibility-audit', 'analytics-audit', 'security-audit'];
+export const AUDIT_ORDER = ['seo-audit', 'technology-audit', 'wordpress-audit', 'performance-audit', 'accessibility-audit', 'analytics-audit', 'security-audit'];
 
 export interface Report {
   client: string;

@@ -39,3 +39,7 @@ The script will prompt for client details and create a ready-to-use directory un
 | Client | URL | Status |
 |---|---|---|
 | noble-reach | https://noblereach.org | SEO ✓ · WordPress ✓ · Accessibility ✓ |
+
+## Conventions
+
+- **Report H1 titles must start with the report name, not the client name.** The web app sidebar strips everything after the em dash, so `# Technology Audit Report — Client Name` is correct; `# Client Name — Technology Audit Report` is not.

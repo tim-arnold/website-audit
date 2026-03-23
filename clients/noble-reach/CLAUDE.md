@@ -44,3 +44,4 @@ Pre-redesign audit for **https://noblereach.org**. The goal is to document every
 - Security audit: **complete** — data and reports in `security-audit/`
 - Use markdown tables for all data presentation
 - Reports should be factual and actionable — the audience is a dev team doing a site rebuild
+- **Report H1 titles must start with the report name, not the client name.** The web app sidebar strips everything after the em dash, so `# Technology Audit Report — Noble Reach Foundation` is correct; `# Noble Reach Foundation — Technology Audit Report` is not.

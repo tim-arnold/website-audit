@@ -40,5 +40,7 @@ Pre-redesign audit for **https://noblereach.org**. The goal is to document every
 
 - Each audit type lives in its own subdirectory: `seo-audit/`, `wordpress-audit/`, `accessibility-audit/`
 - Within each audit: raw/structured data goes in `<audit>/data/`, final reports go in `<audit>/reports/`
+- Analytics audit: planned
+- Security audit: planned
 - Use markdown tables for all data presentation
 - Reports should be factual and actionable — the audience is a dev team doing a site rebuild

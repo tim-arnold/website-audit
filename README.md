@@ -48,6 +48,14 @@ Each audit type requires different tools to be configured in Claude Code.
 
 Prompts for client details and creates a ready-to-use directory under `clients/` from the `_template/`.
 
+## Adding an Audit to an Existing Client
+
+```bash
+./new-client.sh --add-audit
+```
+
+Lists existing clients and their current audit status, then prompts for which client and which audit type to add. Scaffolds the audit directory (with `data/` and `reports/` subdirectories and a `HANDOFF.md`) and updates the client's `CLAUDE.md` status. Automatically selects the correct HANDOFF template (pre-redesign vs. remediation) based on the client's existing `CLAUDE.md`.
+
 ## Report Viewer
 
 Reports are rendered as a navigable web app in `web/`. Live at `audits.weareoutright.com` (Cloudflare Access — email OTP required).

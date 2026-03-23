@@ -17,6 +17,7 @@ Remediation audit for **http://oceanconservancy.org**. The goal is to identify a
 
 - SEO audit: planned
 - Technology audit: **complete** — data and reports in `technology-audit/`
+- Performance audit: **complete** — data and reports in `performance-audit/`
 - Accessibility audit: planned
 - Analytics audit: planned
 - Security audit: planned
@@ -34,7 +35,7 @@ GA4 property ID and other non-public credentials are stored in `.env.local` in t
 
 ## Conventions
 
-- Each audit type lives in its own subdirectory: `seo-audit/`, `technology-audit/`, `accessibility-audit/`, `analytics-audit/`, `security-audit/`
+- Each audit type lives in its own subdirectory: `seo-audit/`, `technology-audit/`, `performance-audit/`, `accessibility-audit/`, `analytics-audit/`, `security-audit/`
 - Within each audit: raw/structured data goes in `<audit>/data/`, final reports go in `<audit>/reports/`
 - Use markdown tables for all data presentation
 - Reports should be factual and actionable — the audience is a dev team doing a site rebuild

@@ -1,4 +1,4 @@
-# Noble Reach Foundation — Security Audit Raw Findings
+# NobleReach Foundation — Security Audit Raw Findings
 
 **Audited:** 2026-03-23
 **Site:** https://noblereach.org

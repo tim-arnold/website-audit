@@ -1,4 +1,4 @@
-# Sonnet Handoff — Noble Reach SEO Benchmark
+# Sonnet Handoff — NobleReach SEO Benchmark
 
 ## Context
 

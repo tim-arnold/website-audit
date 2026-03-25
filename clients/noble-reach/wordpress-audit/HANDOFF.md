@@ -1,4 +1,4 @@
-# WordPress Audit Handoff — Noble Reach
+# WordPress Audit Handoff — NobleReach
 
 ## Context
 
@@ -98,14 +98,14 @@ These are the content model. Every field group needs to be documented.
 
 - The 2024 theme uses **Timber** (Twig templating) — templates are in `themes/noblereach-2024/_html/`
 - A **shadow taxonomy system** (`inc/shadow-tax.php`) syncs taxonomies across related CPTs
-- The theme is part of a **Teal Media multi-site network** codebase (`inc/site_specific.php`) but Noble Reach has no custom slug overrides
+- The theme is part of a **Teal Media multi-site network** codebase (`inc/site_specific.php`) but NobleReach has no custom slug overrides
 - **Secure downloads** system exists in the legacy theme (`inc/secure_downloads.php`)
 - Custom search rewrites `/query/` → `/search` and includes ACF meta in search results
 - No custom shortcodes in either theme (empty `inc/shortcodes.php`)
 
 ## Your Task
 
-Produce two deliverables, saved to `/Users/timarnold/Documents/Outright/Noble Reach/Eval/wordpress-audit/`:
+Produce two deliverables, saved to `/Users/timarnold/Documents/Outright/NobleReach/Eval/wordpress-audit/`:
 
 ### Data File: `data/wordpress-inventory.md`
 

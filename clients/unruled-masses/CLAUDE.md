@@ -15,10 +15,10 @@ Remediation audit for **https://unruledmasses.org**. The goal is to identify and
 
 ## Audit Status
 
-- SEO audit: planned
-- Technology audit: planned
-- Accessibility audit: planned
-- Analytics audit: planned
+- SEO audit: complete · retest-1 in progress (started 2026-03-28)
+- Technology audit: complete · retest-1 in progress (started 2026-03-28)
+- Accessibility audit: complete · retest-1 in progress (started 2026-03-28)
+- Analytics audit: complete · retest-1 in progress (started 2026-03-28)
 
 ## Tools Available
 
@@ -35,6 +35,6 @@ GA4 property ID and other non-public credentials are stored in `.env.local` in t
 
 - Each audit type lives in its own subdirectory: `seo-audit/`, `technology-audit/`, `accessibility-audit/`, `analytics-audit/`
 - Within each audit: raw/structured data goes in `<audit>/data/`, final reports go in `<audit>/reports/`
-- Security audit: complete
+- Security audit: complete · retest-1 in progress (started 2026-03-28)
 - Use markdown tables for all data presentation
 - Reports should be factual and actionable — the audience is a dev team doing a site rebuild

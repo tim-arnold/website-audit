@@ -38,3 +38,20 @@ GA4 property ID and other non-public credentials are stored in `.env.local` in t
 - Within each audit: raw/structured data goes in `<audit>/data/`, final reports go in `<audit>/reports/`
 - Use markdown tables for all data presentation
 - Reports should be factual and actionable — the audience is a dev team doing a site rebuild
+- **Report H1 titles must start with the report name, not the client name.** The web app sidebar strips everything after the em dash, so `# Technology Audit Report — Client Name` is correct; `# Client Name — Technology Audit Report` is not.
+
+## Retesting
+
+After a redesign or remediation, run `./add-retest.sh` from the repo root to scaffold a new retest. The script auto-increments the retest number and creates:
+
+```
+<audit-type>/
+  retest-1/
+    data/        ← re-collected raw data
+    reports/     ← retest reports + comparison
+    HANDOFF.md   ← retest instructions
+```
+
+Retest reports follow the same naming as baseline reports. The comparison report is always `reports/00-comparison.md` — it documents the delta between the baseline and this retest round, using ▲ / ▼ / → to indicate changes.
+
+Multiple retests are supported: `retest-1/`, `retest-2/`, etc. The web app groups them under Initial / Retest 1 / Retest 2 sub-headers in the sidebar.

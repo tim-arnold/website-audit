@@ -155,6 +155,15 @@ body {
   color: var(--accent);
 }
 
+.sidebar-run-label {
+  padding: 0.5rem 1.25rem 0.125rem 1.5rem;
+  font-size: 0.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.35);
+}
+
 .sidebar-link {
   display: block;
   padding: 0.375rem 1.25rem 0.375rem 1.5rem;
@@ -165,6 +174,10 @@ body {
   text-underline-offset: 2px;
   transition: color 0.15s, text-decoration-color 0.15s, background-color 0.15s, padding-left 0.15s;
   line-height: 1.4;
+}
+
+.sidebar-link--indented {
+  padding-left: 1.75rem;
 }
 
 .sidebar-link:hover {
@@ -180,6 +193,15 @@ body {
   font-weight: 600;
   padding-left: 1.5rem;
   text-decoration: none;
+}
+
+.sidebar-link.comparison {
+  color: rgba(203, 254, 69, 0.75);
+  text-decoration-color: rgba(203, 254, 69, 0.3);
+}
+
+.sidebar-link.comparison:hover {
+  color: var(--accent);
 }
 
 /* ── Main content area ───────────────────────────────────────────── */
@@ -231,6 +253,12 @@ body {
   color: var(--black);
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.report-header .retest-badge {
+  background: var(--black);
+  color: var(--accent);
+  border: 1px solid var(--accent);
 }
 
 /* ── Prose (markdown content) ────────────────────────────────────── */
@@ -555,7 +583,6 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.15em;
   color: var(--text-muted);
-  margin-bottom: 0.5rem;
 }
 
 .client-landing-report-list {
@@ -573,6 +600,40 @@ body {
   border-bottom: none;
 }
 
+.client-landing-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 0.5rem;
+}
+
+.retest-badge-sm {
+  display: inline-block;
+  background: var(--black);
+  color: var(--accent);
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  padding: 0.1rem 0.4rem;
+  font-size: 0.5625rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+.client-landing-run-group + .client-landing-run-group {
+  margin-top: 0.75rem;
+}
+
+.client-landing-run-label {
+  font-size: 0.5625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin-bottom: 0.25rem;
+}
+
 .client-landing-report-link {
   display: block;
   padding: 0.75rem 1rem;
@@ -585,6 +646,17 @@ body {
 
 .client-landing-report-link:hover {
   background: var(--accent);
+}
+
+.client-landing-report-link.comparison {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.client-landing-report-link.comparison:hover {
+  background: var(--accent);
+  color: var(--text);
+  font-style: normal;
 }
 
 /* ── Outright-only nav links (require @weareoutright.com Zero Trust auth) ── */

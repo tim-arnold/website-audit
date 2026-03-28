@@ -39,7 +39,7 @@ The analytics setup has made meaningful progress on conversion tracking since th
 | **Search Console not linked** | FAIL | **FAIL** | No change. Organic keyword data still unavailable. |
 | **High direct traffic** | FAIL | **FAIL** | Direct = 78.5% (vs 76.2% at baseline). Slightly worse. |
 | **`(not set)` landing page** | WARN | **WARN — WORSE** | 32 sessions (up from 20), 90.6% bounce (up from 85%). Growing bot/crawler traffic signature. |
-| **Data retention period** | Unknown | Unknown | Cannot be verified via API. Check manually. |
+| **Data retention period** | Unknown | ✅ 14 months | Confirmed manually — GA4 API `update_time` field does not reflect data retention changes; API-based check is unreliable for this setting. |
 | **Google Ads linked** | N/A | N/A | No paid search activity. |
 | **Custom dimensions for custom events** | FAIL | **FAIL** | Still 0 custom dimensions. `Depth`/`scroll_depth`, `Play`/`video_play`, `nav_click`, `social_click`, `cta_click` all fire without parameter capture. |
 
@@ -229,7 +229,7 @@ Search Console is still not linked. 27 organic search sessions recorded — a mo
 
 | # | What | Status vs Original | Fix | Effort |
 |---|---|---|---|---|
-| M1 | **Data retention to 14 months** | UNRESOLVED | GA4 Admin → Data Settings → Data Retention | Low (5 min — do now before March data ages out) |
+| M1 | **Data retention to 14 months** | ✅ RESOLVED | Confirmed manually at 14 months — API `update_time` check is unreliable for this setting | — |
 | M2 | **Standardize event naming** | UNRESOLVED — WORSE | After deduplication in C3, rename remaining custom events to snake_case | Med (2–4 hrs) |
 | M3 | **Custom dimensions** | UNRESOLVED | Define dimensions for `nav_click`, `social_click`, `cta_click`, `scroll_depth`, `video_play` after event cleanup | Low (1 hr) |
 | M4 | **Investigate duplicate page paths** | NEW | `/playbooks/poster-campaigns` and `/resources/action-playbooks/poster-campaigns` appear to be the same content — check for redirect issues | Low (1 hr) |

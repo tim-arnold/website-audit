@@ -24,9 +24,44 @@ Each audit type requires different tools to be configured in Claude Code.
 - Front-end only mode available if no local copy exists (with caveats)
 
 ### Analytics Audit
-- **Google Analytics MCP** (`analytics-mcp`) — GA4 data: traffic, behavior, conversions, data quality checks
-- **GA4 Property ID** — store in the client's `.env.local` (gitignored) as `GA4_PROPERTY_ID`
-- Setup: `pipx install analytics-mcp` + `gcloud auth application-default login` + `claude mcp add analytics-mcp -s user -- pipx run analytics-mcp`
+
+**Tool:** Google Analytics MCP (`analytics-mcp`) — queries GA4 for traffic, behavior, events, conversions, and data quality checks.
+
+#### Access requirements
+
+The client must grant your Google account **Viewer** access (read-only) to their GA4 property before you can pull data. They do this in:
+
+> GA4 Admin → Account Access Management (for all properties) **or** Property Access Management (for one property) → Add users → enter your Google email → role: Viewer
+
+You need the GA4 **property ID** (a numeric ID, e.g. `526160702`, found in GA4 Admin → Property Settings). Store it in the client's `.env.local`:
+
+```
+GA4_PROPERTY_ID=526160702
+```
+
+#### One-time MCP install
+
+```bash
+pipx install analytics-mcp
+claude mcp add analytics-mcp -s user -- pipx run analytics-mcp
+```
+
+#### Authentication (per machine / when token expires)
+
+The MCP uses **Application Default Credentials** with `analytics.readonly` scope. Standard `gcloud auth application-default login` does not include this scope — you must pass it explicitly:
+
+```bash
+gcloud auth application-default login \
+  --scopes="https://www.googleapis.com/auth/analytics.readonly,https://www.googleapis.com/auth/cloud-platform"
+```
+
+This opens a browser to your Google account (the one the client has granted Viewer access). The token is saved locally and persists across sessions until it expires or is revoked. After authenticating, reconnect the server in Claude Code via `/mcp`.
+
+If you see `ACCESS_TOKEN_SCOPE_INSUFFICIENT` errors, re-run the command above — the token is missing the analytics scope and needs to be refreshed.
+
+#### Field name casing
+
+The GA4 Data API requires **camelCase** for all dimension and metric names (`sessionDefaultChannelGroup`, `landingPage`, `deviceCategory`, `yearMonth`, `eventName`, `bounceRate`, etc.), even though the MCP tool description says to use snake_case. Using snake_case returns a 400 error.
 
 ### Security Audit
 - **Local repo/site copy** — for dependency scanning and credential checks

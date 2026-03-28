@@ -46,6 +46,20 @@ pipx install analytics-mcp
 claude mcp add analytics-mcp -s user -- pipx run analytics-mcp
 ```
 
+#### Google Cloud project
+
+All client analytics audits route through a shared GC project in the Outright org — **do not use a client's own GC org**:
+
+- **Org:** `weareoutright.com`
+- **Project:** Analytics MCP
+- **Project ID:** `analytics-mcp-490915`
+
+The Google Analytics Data API must be enabled on this project (already done). Point your local `gcloud` CLI at it:
+
+```bash
+gcloud config set project analytics-mcp-490915
+```
+
 #### Authentication (per machine / when token expires)
 
 The MCP uses **Application Default Credentials** with `analytics.readonly` scope. This is entirely local — the client is not involved. Standard `gcloud auth application-default login` does not include the analytics scope, so you must pass it explicitly:
@@ -55,7 +69,7 @@ gcloud auth application-default login \
   --scopes="https://www.googleapis.com/auth/analytics.readonly,https://www.googleapis.com/auth/cloud-platform"
 ```
 
-This opens a browser where you log in with **your own Google account** (the same one the client granted Viewer access to). The token is saved locally and persists across sessions until it expires or is revoked. After authenticating, reconnect the server in Claude Code via `/mcp`.
+This opens a browser where you log in with **your own Outright Google account** (the same one the client granted Viewer access to). The token is saved locally and persists across sessions until it expires or is revoked. After authenticating, reconnect the server in Claude Code via `/mcp`.
 
 If you see `ACCESS_TOKEN_SCOPE_INSUFFICIENT` errors, re-run the command above — the token is missing the analytics scope and needs to be refreshed.
 

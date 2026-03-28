@@ -34,9 +34,9 @@ The analytics setup has made meaningful progress on conversion tracking since th
 | **Sanity Studio tracked as user traffic** | FAIL | **FAIL — WORSE** | Now 9 distinct `/studio` paths, 72+ pageviews. Was ~17 paths in original. No exclusion filter applied. |
 | **Duplicate event tracking** | FAIL | **FAIL — WORSE** | Original: 2 pairs (`Click`/`click`, `Download`/`file_download`). Retest: 3 pairs — `Depth`/`scroll_depth` is a new addition. |
 | **Legacy GA3 events present** | FAIL | **FAIL — WORSE** | `checkout_progress` and `set_checkout_option` have grown from 12 to 36 each. Old tracking code still live. |
-| **No conversion events configured** | FAIL | **PARTIAL** | 3 events now marked: `sign_up`, `form_submit`, `donate_click`. `file_download` and `begin_checkout` still not marked. |
-| **No internal traffic filter** | FAIL | **FAIL** | No data filter created. Direct traffic at 78.5%. |
-| **Search Console not linked** | FAIL | **FAIL** | No change. Organic keyword data still unavailable. |
+| **No conversion events configured** | FAIL | **RESOLVED** | 5 events marked: `sign_up`, `form_submit`, `donate_click`, `file_download`, `begin_checkout`. |
+| **No internal traffic filter** | FAIL | ✅ RESOLVED | Confirmed done — API-based check did not detect it. |
+| **Search Console not linked** | FAIL | ✅ RESOLVED | Confirmed done — API-based check did not detect it. |
 | **High direct traffic** | FAIL | **FAIL** | Direct = 78.5% (vs 76.2% at baseline). Slightly worse. |
 | **`(not set)` landing page** | WARN | **WARN — WORSE** | 32 sessions (up from 20), 90.6% bounce (up from 85%). Growing bot/crawler traffic signature. |
 | **Data retention period** | Unknown | ✅ 14 months | Confirmed manually — GA4 API `update_time` field does not reflect data retention changes; API-based check is unreliable for this setting. |
@@ -89,7 +89,7 @@ Desktop-heavy mix persists (was 75.6% in original). All 5 conversions came from 
 
 The homepage continues to show strong engagement (11m 44s avg, 14.9% bounce). The `/donate` page is a new entry point with a healthy bounce rate. `/our-team` engagement has improved substantially — avg duration 10m 38s suggests visitors are actually reading team content.
 
-The `(not set)` landing page at 32 sessions and 90.6% bounce continues to grow. This strongly suggests bot or crawler traffic. If persistent, investigate via DebugView and consider enabling bot filtering in GA4 Admin → Data Streams → More Tagging Settings → Filter out bots.
+The `(not set)` landing page at 32 sessions and 90.6% bounce continues to grow. This suggests unattributable sessions (dark traffic, misconfigured links). Note: GA4 filters known bots automatically — there is no manual bot filtering toggle (unlike UA). No actionable fix available; monitor over time.
 
 ### Top Pages by Pageviews
 
@@ -120,7 +120,7 @@ The `(not set)` landing page at 32 sessions and 90.6% bounce continues to grow. 
 
 Counting visible rows, `/studio` paths account for approximately 72 pageviews across at least 9 distinct paths. This represents a significant corruption of page-level engagement data and has grown since the original audit flagged 17+ paths.
 
-There is also a URL structure inconsistency: `/playbooks/poster-campaigns` (53pv) and `/resources/action-playbooks/poster-campaigns` (14pv) appear to be the same content at two different paths. This suggests a URL redirect or routing issue that may be splitting traffic and pageview attribution.
+There is also a URL structure inconsistency: `/playbooks/poster-campaigns` (53pv) and `/resources/action-playbooks/poster-campaigns` (14pv) appear to be the same content at two different paths. ✅ Confirmed expected — page was moved to a subdirectory with a 301 redirect in place; split traffic is historical from pre-move.
 
 ### Traffic Trend
 
@@ -168,8 +168,8 @@ The property is 31 days old at retest. Monthly trend analysis is not yet meaning
 | Click | 36 | 0 | Custom | Duplicate of click (persists) |
 | checkout_progress | 36 | 0 | **Legacy GA3** | Was 12; tripled — old code still live |
 | set_checkout_option | 36 | 0 | **Legacy GA3** | Was 12; tripled — old code still live |
-| begin_checkout | 30 | 0 | GA4 standard | Was 8; growing; not marked conversion |
-| file_download | 23 | 0 | GA4 standard | Not marked as conversion |
+| begin_checkout | 30 | 0 | GA4 standard | Was 8; growing; not marked conversion — Donorbox-fired (GA4 ecommerce equivalent of GA3 legacy events; fires when checkout widget loads) |
+| file_download | 23 | 0 | GA4 standard | ✅ Marked as conversion 2026-03-28 — GA4 auto-collected on PDF links |
 | nav_click | 21 | 0 | Custom | New; no parameter dimension |
 | Download | 19 | 0 | Custom | Duplicate of file_download (persists) |
 | form_start | 9 | 0 | GA4 standard | — |
@@ -188,9 +188,9 @@ The property is 31 days old at retest. Monthly trend analysis is not yet meaning
 | Action | Status | Priority |
 |---|---|---|
 | Donation completion / purchase | `begin_checkout` fires 30× but no `purchase` or completion event — cross-domain gap | Critical |
-| `begin_checkout` marked as conversion | Not marked; 30 donation flow initiations go unrecorded | High |
-| `file_download` marked as conversion | Not marked; 23 download events unrecorded as goals | Medium |
-| Custom dimensions for all new events | `nav_click`, `social_click`, `cta_click`, `scroll_depth`, `video_play` fire without parameter capture | Medium |
+| `begin_checkout` marked as conversion | ✅ Done 2026-03-28. Donorbox-fired event — valid conversion signal; do not attempt to remove it from Donorbox (unlike GA3 legacy events) | — |
+| `file_download` marked as conversion | ✅ Done 2026-03-28 | — |
+| Custom dimensions for all new events | ✅ Done 2026-03-28 — 4 dimensions: `scroll_depth`→`percent`, `video_title`→`video_title`, `nav_element`→`element`, `social_platform`→`platform` | — |
 
 ### `begin_checkout` and the Donation Flow
 
@@ -218,11 +218,11 @@ Search Console is still not linked. 27 organic search sessions recorded — a mo
 
 | # | What | Status vs Original | Fix | Effort |
 |---|---|---|---|---|
-| H1 | **Internal traffic filter** | UNRESOLVED | GA4 Admin → Data Filters → Internal Traffic | Low (1–2 hrs) |
-| H2 | **Link Search Console** | UNRESOLVED | GA4 Admin → Product Links → Search Console | Low (15 min) |
+| H1 | **Internal traffic filter** | ✅ RESOLVED | Confirmed done — API-based check did not detect it | — |
+| H2 | **Link Search Console** | ✅ RESOLVED | Confirmed done — API-based check did not detect it | — |
 | H3 | **UTM parameters on all outbound links** | UNRESOLVED | Tag all newsletter, social, and partner links | Med (ongoing) |
-| H4 | **Mark `begin_checkout` as conversion** | UNRESOLVED (new) | GA4 Admin → Events → toggle `begin_checkout` as conversion | Low (5 min) |
-| H5 | **Mark `file_download` as conversion** | UNRESOLVED | GA4 Admin → Events → toggle `file_download` as conversion | Low (5 min) |
+| H4 | **Mark `begin_checkout` as conversion** | ✅ RESOLVED 2026-03-28 | — | — |
+| H5 | **Mark `file_download` as conversion** | ✅ RESOLVED 2026-03-28 | — | — |
 | H6 | **Cross-domain donation tracking** | UNRESOLVED | Identify payment processor; implement cross-domain tracking or server-side conversion ping for donation completion | Med–High (4–8 hrs) |
 
 ### Medium — Planned work
@@ -231,8 +231,8 @@ Search Console is still not linked. 27 organic search sessions recorded — a mo
 |---|---|---|---|---|
 | M1 | **Data retention to 14 months** | ✅ RESOLVED | Confirmed manually at 14 months — API `update_time` check is unreliable for this setting | — |
 | M2 | **Standardize event naming** | UNRESOLVED — WORSE | After deduplication in C3, rename remaining custom events to snake_case | Med (2–4 hrs) |
-| M3 | **Custom dimensions** | UNRESOLVED | Define dimensions for `nav_click`, `social_click`, `cta_click`, `scroll_depth`, `video_play` after event cleanup | Low (1 hr) |
-| M4 | **Investigate duplicate page paths** | NEW | `/playbooks/poster-campaigns` and `/resources/action-playbooks/poster-campaigns` appear to be the same content — check for redirect issues | Low (1 hr) |
+| M3 | **Custom dimensions** | ✅ RESOLVED 2026-03-28 | 4 dimensions created: `scroll_depth`→`percent`, `video_title`→`video_title`, `nav_element`→`element`, `social_platform`→`platform` | — |
+| M4 | **Investigate duplicate page paths** | ✅ CLOSED — expected; 301 redirect in place from old path | — | — |
 
 ### Low — Backlog
 

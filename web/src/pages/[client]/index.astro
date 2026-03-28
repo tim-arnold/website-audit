@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { getClients, getClientName, getClientReports, AUDIT_LABELS, AUDIT_ORDER } from '$lib/reports';
+import type { Report } from '$lib/reports';
 
 export async function getStaticPaths() {
   const clients = getClients();
@@ -13,7 +14,7 @@ const { client } = Astro.params;
 const clientName = getClientName(client);
 const reports = getClientReports(client);
 
-const reportsByAuditType: Record<string, typeof reports> = {};
+const reportsByAuditType: Record<string, Report[]> = {};
 for (const report of reports) {
   if (!reportsByAuditType[report.auditType]) {
     reportsByAuditType[report.auditType] = [];
@@ -22,6 +23,23 @@ for (const report of reports) {
 }
 
 const auditTypesPresent = AUDIT_ORDER.filter(at => reportsByAuditType[at]?.length > 0);
+
+function hasRetests(reports: Report[]): boolean {
+  return reports.some(r => r.run > 0);
+}
+
+function maxRun(reports: Report[]): number {
+  return Math.max(...reports.map(r => r.run));
+}
+
+function reportsByRun(reports: Report[]): Map<number, Report[]> {
+  const map = new Map<number, Report[]>();
+  for (const r of reports) {
+    if (!map.has(r.run)) map.set(r.run, []);
+    map.get(r.run)!.push(r);
+  }
+  return map;
+}
 ---
 
 <Base title={clientName} client={client}>
@@ -32,20 +50,52 @@ const auditTypesPresent = AUDIT_ORDER.filter(at => reportsByAuditType[at]?.lengt
       <p class="client-landing-empty">No reports available yet.</p>
     ) : (
       <div class="client-landing-sections">
-        {auditTypesPresent.map(auditType => (
-          <div class="client-landing-section">
-            <h2 class="client-landing-section-label">{AUDIT_LABELS[auditType] ?? auditType}</h2>
-            <ul class="client-landing-report-list">
-              {reportsByAuditType[auditType].map(report => (
-                <li>
-                  <a href={`/${client}/${report.slug}/`} class="client-landing-report-link">
-                    {report.title}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+        {auditTypesPresent.map(auditType => {
+          const auditReports = reportsByAuditType[auditType];
+          const withRetests = hasRetests(auditReports);
+          const byRun = reportsByRun(auditReports);
+          const runs = Array.from(byRun.keys()).sort((a, b) => a - b);
+
+          return (
+            <div class="client-landing-section">
+              <div class="client-landing-section-header">
+                <h2 class="client-landing-section-label">{AUDIT_LABELS[auditType] ?? auditType}</h2>
+                {withRetests && (
+                  <span class="retest-badge-sm">Retest {maxRun(auditReports)}</span>
+                )}
+              </div>
+
+              {withRetests ? (
+                runs.map(run => (
+                  <div class="client-landing-run-group">
+                    <div class="client-landing-run-label">
+                      {run === 0 ? 'Initial' : `Retest ${run}`}
+                    </div>
+                    <ul class="client-landing-report-list">
+                      {byRun.get(run)!.map(report => (
+                        <li>
+                          <a href={`/${client}/${report.slug}/`} class={`client-landing-report-link${report.isComparison ? ' comparison' : ''}`}>
+                            {report.isComparison ? '↔ ' : ''}{report.title}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))
+              ) : (
+                <ul class="client-landing-report-list">
+                  {auditReports.map(report => (
+                    <li>
+                      <a href={`/${client}/${report.slug}/`} class="client-landing-report-link">
+                        {report.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          );
+        })}
       </div>
     )}
   </div>

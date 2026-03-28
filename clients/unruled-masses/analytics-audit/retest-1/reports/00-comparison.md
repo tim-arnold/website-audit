@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-- **Conversion tracking is now partially in place.** Three events are newly marked as conversions — `sign_up`, `form_submit`, and `donate_click` — yielding 5 total conversions recorded. This is the most significant improvement since the original audit.
+- **Conversion tracking is now fully configured.** Five events are marked as conversions — `sign_up`, `form_submit`, `donate_click`, `file_download`, and `begin_checkout` — yielding 5 total conversions recorded. This is the most significant improvement since the original audit.
 - **`form_submit` now fires**, closing the most critical gap identified in the original audit where `form_start` fired but no submission event existed.
 - **The Sanity Studio tracking problem has gotten significantly worse.** Studio paths now account for 72+ pageviews across at least 9 distinct paths. The original audit flagged ~17 paths; the issue has not been addressed and has grown.
 - **Legacy GA3 events tripled.** `checkout_progress` and `set_checkout_option` went from 12 to 36 each — the underlying old tracking code is still live and accumulating junk events.
@@ -22,8 +22,14 @@
 
 | Issue | Status |
 |---|---|
-| No conversion events configured (C4) | **PARTIAL** — 3 conversions now configured; `file_download` and `begin_checkout` still not marked |
-| `form_submit` missing (H4) | **FIXED** — `form_submit` now fires (3 events, 2 conversions) |
+| No conversion events configured (C4) | **RESOLVED** — `sign_up`, `form_submit`, `donate_click`, `file_download`, `begin_checkout` all marked as conversions |
+| `form_submit` missing (H4) | **RESOLVED** — `form_submit` now fires (3 events, 2 conversions) |
+| No internal traffic filter (H1) | **RESOLVED** — confirmed done; not detectable via GA4 API (expected) |
+| Search Console not linked (H2) | **RESOLVED** — confirmed done; not detectable via GA4 API (expected) |
+| Data retention unknown (M1) | **RESOLVED** — confirmed at 14 months manually; GA4 API `update_time` does not reflect this setting |
+| No custom dimensions (M3) | **RESOLVED** — 4 dimensions created: `scroll_depth`→`percent`, `video_title`→`video_title`, `nav_element`→`element`, `social_platform`→`platform` |
+| `begin_checkout` not marked conversion (M4) | **RESOLVED** — marked as conversion 2026-03-28 |
+| `file_download` not marked conversion | **RESOLVED** — marked as conversion 2026-03-28 |
 
 ### Issues Still Outstanding
 
@@ -32,13 +38,7 @@
 | Sanity Studio tracked as user traffic (C1) | FAIL | **WORSE** — 9 distinct `/studio` paths, 72+ pageviews | Critical |
 | Legacy GA3 events (C2) | FAIL | **WORSE** — 12→36 events each; old tracking code still live | Critical |
 | Duplicate event tracking (C3) | FAIL | **WORSE** — `Depth`/`scroll_depth` is a new third pair | Critical |
-| No internal traffic filter (H1) | FAIL | FAIL — no filter created | High |
-| Search Console not linked (H2) | FAIL | FAIL — still not linked | High |
 | No UTM parameter coverage (H3) | FAIL | FAIL — Direct at 78.5% (was 76.2%) | High |
-| Data retention unknown (M1) | Unknown | Unknown — API does not expose setting | Medium |
-| No custom dimensions (M3) | FAIL | FAIL — still 0 custom dimensions | Medium |
-| `begin_checkout` not marked conversion (M4) | FAIL | FAIL — 30 events, 0 conversions recorded | Medium |
-| `file_download` not marked conversion | — | FAIL — 23 events, not marked | Medium |
 
 ### New Issues Introduced
 
@@ -136,7 +136,7 @@ Referral is driving an outsized share of conversions at 26.7%. Worth identifying
 | Events marked as conversions | 0 | 3 | ▲ +3 |
 | `/studio` pageviews | ~17 paths (est.) | 72+ pageviews across 9 paths | ▼ worse |
 | Legacy GA3 event count | 12 each | 36 each | ▼ worse |
-| Search Console linked | No | No | → |
-| Internal traffic filter | No | No | → |
-| Custom dimensions | 0 | 0 | → |
+| Search Console linked | No | Yes ✓ | ▲ (confirmed; not API-verifiable) |
+| Internal traffic filter | No | Yes ✓ | ▲ (confirmed; not API-verifiable) |
+| Custom dimensions | 0 | 4 | ▲ +4 |
 | Duplicate event pairs | 2 pairs | 3 pairs | ▼ worse |

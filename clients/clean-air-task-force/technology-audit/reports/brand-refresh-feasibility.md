@@ -7,6 +7,21 @@
 
 ---
 
+## Table of Contents
+
+- [Executive Summary](#executive-summary)
+- [Theme Architecture](#theme-architecture)
+- [Color System Analysis](#color-system-analysis)
+- [Typography System](#typography-system)
+- [Utility Class System](#utility-class-system)
+- [Responsive Design](#responsive-design)
+- [Block-by-Block Complexity](#block-by-block-complexity)
+- [Feasibility Assessment](#feasibility-assessment)
+- [Risks & Gotchas](#risks--gotchas)
+- [Recommended Approach](#recommended-approach)
+
+---
+
 ## Executive Summary
 
 A brand refresh (new colors, fonts, and visual polish) on the existing `catf-2021` theme is **feasible but not trivial**. The theme was built with a reasonably well-structured design token system, but the implementation has inconsistencies that would need to be addressed:

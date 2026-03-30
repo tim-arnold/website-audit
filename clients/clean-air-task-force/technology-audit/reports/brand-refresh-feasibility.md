@@ -11,7 +11,7 @@
 
 - [Executive Summary](#executive-summary)
 - [Feasibility Assessment](#feasibility-assessment)
-- [Risks & Gotchas](#risks--gotchas)
+- [Risks & Gotchas](#risks-gotchas)
 - [Recommended Approach](#recommended-approach)
 - [Theme Architecture](#theme-architecture)
 - [Color System Analysis](#color-system-analysis)

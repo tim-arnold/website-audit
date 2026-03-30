@@ -10,15 +10,15 @@
 ## Table of Contents
 
 - [Executive Summary](#executive-summary)
+- [Feasibility Assessment](#feasibility-assessment)
+- [Risks & Gotchas](#risks--gotchas)
+- [Recommended Approach](#recommended-approach)
 - [Theme Architecture](#theme-architecture)
 - [Color System Analysis](#color-system-analysis)
 - [Typography System](#typography-system)
 - [Utility Class System](#utility-class-system)
 - [Responsive Design](#responsive-design)
 - [Block-by-Block Complexity](#block-by-block-complexity)
-- [Feasibility Assessment](#feasibility-assessment)
-- [Risks & Gotchas](#risks--gotchas)
-- [Recommended Approach](#recommended-approach)
 
 ---
 
@@ -35,6 +35,94 @@ A brand refresh (new colors, fonts, and visual polish) on the existing `catf-202
 4. **The main risk is scattered hardcoded values** — shadow opacities, overlay colors, border colors, and a few SVG data URIs contain raw color values that the variable system does not reach. These would need to be found and updated manually or refactored to use variables.
 
 5. **A pure color + font swap could be executed in 4–8 hours** by an experienced developer with theme source access. A more thorough cleanup (eliminating all hardcoded duplicates, adding missing variable references) would take 12–20 hours.
+
+---
+
+## Feasibility Assessment
+
+### Option A: Quick Color + Font Swap (4–8 hours)
+
+**What it covers:**
+- Update 10 color values in `theme.json` → updates ~210 CSS variable references site-wide
+- Replace font files in `assets/dist/fonts/`
+- Update `@font-face` in `_fonts.scss` and font stacks in `_typography.scss`
+- Rebuild CSS (`npm run build` or equivalent)
+
+**What it leaves behind:**
+- ~36 hardcoded hex/rgba values in SCSS (old colors persist in shadows, SVG icons, edge-case borders)
+- SVG data URI colors in icons (arrows, etc.) would still show old palette
+- Any content with inline `style=""` attributes set in the WP editor
+- Near-duplicate off-whites (`#f3f1f2` vs `#F3F2F2`) not on the variable system
+
+**Verdict:** Covers ~90% of the visual surface. Acceptable for a fast refresh, but noticeable inconsistencies in icons and shadows.
+
+### Option B: Thorough Refresh with SCSS Cleanup (12–20 hours)
+
+Everything in Option A, plus:
+- Audit all 90 SCSS files for hardcoded color values and replace with `var()` references
+- Refactor SVG data URIs to use inline SVGs or CSS `mask-image` so colors can be controlled via variables
+- Extract shadow/overlay values into SCSS variables or CSS custom properties
+- Remove unused tokens (Brand D, E, Black) from `theme.json`
+- Clean up near-duplicate values (`#f3f1f2` → `#F3F2F2`)
+- QA pass across all page templates and block combinations
+
+**Verdict:** Clean result with no legacy color leakage. The right choice if the site will continue to evolve after the refresh.
+
+### Option C: Full Rebuild (Not Recommended for Brand Refresh Only)
+
+If the goal is *only* a brand refresh (new colors, fonts, minor visual tweaks), a full theme rebuild is overkill. The current theme's architecture is sound:
+- Well-organized SCSS with clear separation of concerns
+- Functional design token system via `theme.json`
+- Modular block system with consistent patterns
+- Standard WordPress conventions throughout
+
+A rebuild is only justified if the refresh is paired with **structural changes** (new layouts, new content types, new CMS, responsive redesign, etc.).
+
+---
+
+## Risks & Gotchas
+
+| Risk | Severity | Mitigation |
+|---|---|---|
+| **No source access** — we cannot confirm build pipeline works | High | Get repo access and test `npm install && npm run build` before starting |
+| **Commercial font license (TT Norms Pro)** — may not cover a new domain | High | Verify license terms before assuming the font can transfer |
+| **Editor inline styles** — content authors may have applied colors via WP editor color picker | Medium | Run a DB search for `has-brand-*` classes and inline `style="color:` / `background-color:` in `post_content` |
+| **SVG data URIs** — hardcoded colors in base64-encoded SVGs | Medium | 5–6 instances; need manual replacement |
+| **Pardot embedded forms** — styled externally | Medium | Pardot form styles are controlled in Pardot, not the theme — must be updated separately |
+| **Gravity Forms** — has its own stylesheet (`gravity-forms.min.css`) | Medium | Separate CSS file needs its own review for brand colors |
+| **`ie.min.css`** — IE-specific overrides | Low | Can be deleted; IE is EOL |
+| **Flickity dependency** — GPL-licensed, unmaintained | Low | Not a brand refresh concern, but flag for future |
+| **Cookie Script banner** — styled externally | Low | May need configuration update in Cookie Script dashboard |
+
+---
+
+## Recommended Approach
+
+For a brand refresh on the existing site, **Option B (12–20 hours)** is the right balance:
+
+1. **Get theme source access** and confirm the build pipeline works
+2. **Update `theme.json`** with the new color palette (10 values)
+3. **Replace font files** and update `_fonts.scss` + `_typography.scss`
+4. **Search-and-replace hardcoded values** in SCSS source files
+5. **Rebuild and deploy** CSS
+6. **QA every page template**: homepage, blog post, program page, resource page, expert page, archive pages, search, regional pages, timeline
+7. **Update external systems**: Pardot form styles, Cookie Script branding, Gravity Forms if customized, donation platform if branded
+
+### Files to Touch (Priority Order)
+
+| File | What Changes |
+|---|---|
+| `theme.json` | All color + optional font-size token values |
+| `base/_fonts.scss` | `@font-face` declarations for new typeface |
+| `base/_typography.scss` | `font-family` stacks |
+| `base/_variables.scss` | Any SCSS-level color variables (breakpoints stay) |
+| `base/_accents.scss` | Utility class color assignments (should auto-update via variables) |
+| `base/_elements.scss` | Base element styles — check for hardcoded colors |
+| `blocks/*.scss` (13 ACF blocks) | Scan for hardcoded hex in SVG data URIs and edge-case overrides |
+| `modules/*.scss` (30+ files) | Scan for hardcoded colors |
+| `mixins/_buttons.scss` | Button color patterns |
+| `mixins/_accents.scss` | Accent mixin definitions |
+| `gravity-forms.min.css` source | Form element brand colors |
 
 ---
 
@@ -320,91 +408,3 @@ These are consistent across all 90 SCSS files and are likely defined as SCSS var
 | `acf-block-logo-grid` | ~15 | High | None | **Lowest** |
 | `acf-block-bio-tiles` | ~15 | High | None | **Lowest** |
 | WP core blocks (9 files) | ~120 total | Mixed | Some | Medium |
-
----
-
-## Feasibility Assessment
-
-### Option A: Quick Color + Font Swap (4–8 hours)
-
-**What it covers:**
-- Update 10 color values in `theme.json` → updates ~210 CSS variable references site-wide
-- Replace font files in `assets/dist/fonts/`
-- Update `@font-face` in `_fonts.scss` and font stacks in `_typography.scss`
-- Rebuild CSS (`npm run build` or equivalent)
-
-**What it leaves behind:**
-- ~36 hardcoded hex/rgba values in SCSS (old colors persist in shadows, SVG icons, edge-case borders)
-- SVG data URI colors in icons (arrows, etc.) would still show old palette
-- Any content with inline `style=""` attributes set in the WP editor
-- Near-duplicate off-whites (`#f3f1f2` vs `#F3F2F2`) not on the variable system
-
-**Verdict:** Covers ~90% of the visual surface. Acceptable for a fast refresh, but noticeable inconsistencies in icons and shadows.
-
-### Option B: Thorough Refresh with SCSS Cleanup (12–20 hours)
-
-Everything in Option A, plus:
-- Audit all 90 SCSS files for hardcoded color values and replace with `var()` references
-- Refactor SVG data URIs to use inline SVGs or CSS `mask-image` so colors can be controlled via variables
-- Extract shadow/overlay values into SCSS variables or CSS custom properties
-- Remove unused tokens (Brand D, E, Black) from `theme.json`
-- Clean up near-duplicate values (`#f3f1f2` → `#F3F2F2`)
-- QA pass across all page templates and block combinations
-
-**Verdict:** Clean result with no legacy color leakage. The right choice if the site will continue to evolve after the refresh.
-
-### Option C: Full Rebuild (Not Recommended for Brand Refresh Only)
-
-If the goal is *only* a brand refresh (new colors, fonts, minor visual tweaks), a full theme rebuild is overkill. The current theme's architecture is sound:
-- Well-organized SCSS with clear separation of concerns
-- Functional design token system via `theme.json`
-- Modular block system with consistent patterns
-- Standard WordPress conventions throughout
-
-A rebuild is only justified if the refresh is paired with **structural changes** (new layouts, new content types, new CMS, responsive redesign, etc.).
-
----
-
-## Risks & Gotchas
-
-| Risk | Severity | Mitigation |
-|---|---|---|
-| **No source access** — we cannot confirm build pipeline works | High | Get repo access and test `npm install && npm run build` before starting |
-| **Commercial font license (TT Norms Pro)** — may not cover a new domain | High | Verify license terms before assuming the font can transfer |
-| **Editor inline styles** — content authors may have applied colors via WP editor color picker | Medium | Run a DB search for `has-brand-*` classes and inline `style="color:` / `background-color:` in `post_content` |
-| **SVG data URIs** — hardcoded colors in base64-encoded SVGs | Medium | 5–6 instances; need manual replacement |
-| **Pardot embedded forms** — styled externally | Medium | Pardot form styles are controlled in Pardot, not the theme — must be updated separately |
-| **Gravity Forms** — has its own stylesheet (`gravity-forms.min.css`) | Medium | Separate CSS file needs its own review for brand colors |
-| **`ie.min.css`** — IE-specific overrides | Low | Can be deleted; IE is EOL |
-| **Flickity dependency** — GPL-licensed, unmaintained | Low | Not a brand refresh concern, but flag for future |
-| **Cookie Script banner** — styled externally | Low | May need configuration update in Cookie Script dashboard |
-
----
-
-## Recommended Approach
-
-For a brand refresh on the existing site, **Option B (12–20 hours)** is the right balance:
-
-1. **Get theme source access** and confirm the build pipeline works
-2. **Update `theme.json`** with the new color palette (10 values)
-3. **Replace font files** and update `_fonts.scss` + `_typography.scss`
-4. **Search-and-replace hardcoded values** in SCSS source files
-5. **Rebuild and deploy** CSS
-6. **QA every page template**: homepage, blog post, program page, resource page, expert page, archive pages, search, regional pages, timeline
-7. **Update external systems**: Pardot form styles, Cookie Script branding, Gravity Forms if customized, donation platform if branded
-
-### Files to Touch (Priority Order)
-
-| File | What Changes |
-|---|---|
-| `theme.json` | All color + optional font-size token values |
-| `base/_fonts.scss` | `@font-face` declarations for new typeface |
-| `base/_typography.scss` | `font-family` stacks |
-| `base/_variables.scss` | Any SCSS-level color variables (breakpoints stay) |
-| `base/_accents.scss` | Utility class color assignments (should auto-update via variables) |
-| `base/_elements.scss` | Base element styles — check for hardcoded colors |
-| `blocks/*.scss` (13 ACF blocks) | Scan for hardcoded hex in SVG data URIs and edge-case overrides |
-| `modules/*.scss` (30+ files) | Scan for hardcoded colors |
-| `mixins/_buttons.scss` | Button color patterns |
-| `mixins/_accents.scss` | Accent mixin definitions |
-| `gravity-forms.min.css` source | Form element brand colors |

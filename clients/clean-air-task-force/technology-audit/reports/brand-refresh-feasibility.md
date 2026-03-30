@@ -19,7 +19,7 @@ A brand refresh (new colors, fonts, and visual polish) on the existing `catf-202
 
 4. **The main risk is scattered hardcoded values** — shadow opacities, overlay colors, border colors, and a few SVG data URIs contain raw color values that the variable system does not reach. These would need to be found and updated manually or refactored to use variables.
 
-5. **A pure color + font swap could be executed in 1–2 days** by an experienced developer with theme source access. A more thorough cleanup (eliminating all hardcoded duplicates, adding missing variable references) would take 3–5 days.
+5. **A pure color + font swap could be executed in 4–8 hours** by an experienced developer with theme source access. A more thorough cleanup (eliminating all hardcoded duplicates, adding missing variable references) would take 12–20 hours.
 
 ---
 
@@ -310,7 +310,7 @@ These are consistent across all 90 SCSS files and are likely defined as SCSS var
 
 ## Feasibility Assessment
 
-### Option A: Quick Color + Font Swap (1–2 days)
+### Option A: Quick Color + Font Swap (4–8 hours)
 
 **What it covers:**
 - Update 10 color values in `theme.json` → updates ~210 CSS variable references site-wide
@@ -326,7 +326,7 @@ These are consistent across all 90 SCSS files and are likely defined as SCSS var
 
 **Verdict:** Covers ~90% of the visual surface. Acceptable for a fast refresh, but noticeable inconsistencies in icons and shadows.
 
-### Option B: Thorough Refresh with SCSS Cleanup (3–5 days)
+### Option B: Thorough Refresh with SCSS Cleanup (12–20 hours)
 
 Everything in Option A, plus:
 - Audit all 90 SCSS files for hardcoded color values and replace with `var()` references
@@ -368,7 +368,7 @@ A rebuild is only justified if the refresh is paired with **structural changes**
 
 ## Recommended Approach
 
-For a brand refresh on the existing site, **Option B (3–5 days)** is the right balance:
+For a brand refresh on the existing site, **Option B (12–20 hours)** is the right balance:
 
 1. **Get theme source access** and confirm the build pipeline works
 2. **Update `theme.json`** with the new color palette (10 values)

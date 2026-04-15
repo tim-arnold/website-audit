@@ -33,11 +33,17 @@ pipx install analytics-mcp
 
 ### 2. Create a GCP project and enable the Analytics APIs
 
+New client projects should be created in the **Outright Google Cloud Console**, owned by `tim@weareoutright.com`, with `dev@weareoutright.com` added as a user.
+
 ```bash
-gcloud auth login
+gcloud auth login  # log in as tim@weareoutright.com
 gcloud projects create analytics-mcp-project --name="Analytics MCP"
 gcloud config set project analytics-mcp-project
 gcloud services enable analyticsdata.googleapis.com analyticsadmin.googleapis.com
+# Add dev@weareoutright.com as a viewer so it can authenticate locally
+gcloud projects add-iam-policy-binding analytics-mcp-project \
+  --member="user:dev@weareoutright.com" \
+  --role="roles/viewer"
 ```
 
 > To reuse an existing GCP project, skip `projects create` and just run `gcloud config set project YOUR_PROJECT_ID`.

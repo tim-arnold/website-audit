@@ -37,12 +37,12 @@ New client projects should be created in the **Outright Google Cloud Console**, 
 
 ```bash
 gcloud auth login  # log in as tim@weareoutright.com
-gcloud projects create analytics-mcp-project --name="Analytics MCP"
-gcloud config set project analytics-mcp-project
+gcloud projects create analytics-mcp-noble-reach --name="Analytics MCP - NobleReach"
+gcloud config set project analytics-mcp-noble-reach
 gcloud services enable analyticsdata.googleapis.com analyticsadmin.googleapis.com
 # Add dev@weareoutright.com as a viewer so it can authenticate locally
-gcloud projects add-iam-policy-binding analytics-mcp-project \
-  --member="user:dev@weareoutright.com" \
+gcloud projects add-iam-policy-binding analytics-mcp-noble-reach \
+  --member="group:dev@weareoutright.com" \
   --role="roles/viewer"
 ```
 
@@ -51,11 +51,12 @@ gcloud projects add-iam-policy-binding analytics-mcp-project \
 ### 3. Authenticate
 
 ```bash
-gcloud auth application-default login \
-  --scopes=https://www.googleapis.com/auth/analytics.readonly,https://www.googleapis.com/auth/cloud-platform
+gcloud config set account tim@weareoutright.com
+gcloud auth application-default login --scopes=https://www.googleapis.com/auth/analytics.readonly,https://www.googleapis.com/auth/cloud-platform
+gcloud auth application-default set-quota-project analytics-mcp-noble-reach
 ```
 
-A browser window will open — log in with the Google account that has access to the GA4 property.
+A browser window will open — log in as `tim@weareoutright.com`. The `set-quota-project` command must run after ADC tokens exist. Note: keep `--scopes` on one line; backslash continuations can silently break in zsh.
 
 ### 4. Register the MCP with Claude Code
 
@@ -98,7 +99,7 @@ Use `get_property_details` to get: data retention period, time zone, currency, l
 `run_report` — dimensions: `yearMonth`; metrics: `sessions`, `newUsers`. Date range: last 24 months. This is the baseline the rebuild must maintain.
 
 ### g) Top exit pages
-`run_report` — dimensions: `pagePath`; metrics: `sessions`, `exitRate`. Limit 20, sorted by `exitRate` descending.
+`run_report` — dimensions: `pagePath`; metrics: `sessions`, `bounceRate`. Limit 20, sorted by `bounceRate` descending. Note: `exitRate` is not a valid GA4 Data API metric — use `bounceRate` as a proxy.
 
 ### h) Conversion events and funnel
 `run_report` — dimensions: `eventName`; metrics: `eventCount`, `conversions`. Filter to events where `isConversionEvent = true`. Also pull all events by name (no filter) to see what's being tracked.

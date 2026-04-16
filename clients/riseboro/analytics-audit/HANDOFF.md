@@ -35,12 +35,12 @@ New client projects should be created in the **Outright Google Cloud Console**, 
 
 ```bash
 gcloud auth login  # log in as tim@weareoutright.com
-gcloud projects create analytics-mcp-project --name="Analytics MCP"
-gcloud config set project analytics-mcp-project
+gcloud projects create analytics-mcp-riseboro --name="Analytics MCP - RiseBoro"
+gcloud config set project analytics-mcp-riseboro
 gcloud services enable analyticsdata.googleapis.com analyticsadmin.googleapis.com
 # Add dev@weareoutright.com as a viewer so it can authenticate locally
-gcloud projects add-iam-policy-binding analytics-mcp-project \
-  --member="user:dev@weareoutright.com" \
+gcloud projects add-iam-policy-binding analytics-mcp-riseboro \
+  --member="group:dev@weareoutright.com" \
   --role="roles/viewer"
 ```
 
@@ -49,11 +49,12 @@ gcloud projects add-iam-policy-binding analytics-mcp-project \
 ### 3. Authenticate
 
 ```bash
-gcloud auth application-default login \
-  --scopes=https://www.googleapis.com/auth/analytics.readonly,https://www.googleapis.com/auth/cloud-platform
+gcloud config set account tim@weareoutright.com
+gcloud auth application-default login --scopes=https://www.googleapis.com/auth/analytics.readonly,https://www.googleapis.com/auth/cloud-platform
+gcloud auth application-default set-quota-project analytics-mcp-riseboro
 ```
 
-A browser window will open — log in with the Google account that has access to the GA4 property.
+A browser window will open — log in as `tim@weareoutright.com`. The `set-quota-project` command must run after ADC tokens exist. Note: keep `--scopes` on one line; backslash continuations can silently break in zsh.
 
 ### 4. Register the MCP with Claude Code
 

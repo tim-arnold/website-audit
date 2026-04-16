@@ -57,11 +57,12 @@ Retest reports live at `<audit-type>/retest-N/reports/`. The comparison report i
 The `analytics-mcp` server uses **Application Default Credentials** with the `analytics.readonly` scope. Standard `gcloud auth application-default login` does NOT include this scope — you must pass it explicitly. If you see `ACCESS_TOKEN_SCOPE_INSUFFICIENT` errors, re-authenticate:
 
 ```bash
-gcloud auth application-default login \
-  --scopes="https://www.googleapis.com/auth/analytics.readonly,https://www.googleapis.com/auth/cloud-platform"
+gcloud config set account tim@weareoutright.com
+gcloud auth application-default login --scopes=https://www.googleapis.com/auth/analytics.readonly,https://www.googleapis.com/auth/cloud-platform
+gcloud auth application-default set-quota-project analytics-mcp-<client-slug>
 ```
 
-After re-authenticating, reconnect the MCP server via `/mcp` in Claude Code.
+Keep `--scopes` on one line — backslash continuations can silently break in zsh. After re-authenticating, reconnect the MCP server via `/mcp` in Claude Code.
 
 **Field name casing:** Despite the MCP tool description saying to use snake_case, the GA4 Data API requires **camelCase** for all dimension and metric names. Use `sessionDefaultChannelGroup`, `landingPage`, `deviceCategory`, `yearMonth`, `eventName`, `eventCount`, `newUsers`, `bounceRate`, `engagedSessions`, `averageSessionDuration`, etc. Snake_case will return a 400 error with a camelCase suggestion.
 

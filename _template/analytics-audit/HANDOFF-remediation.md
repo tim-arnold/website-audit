@@ -35,25 +35,30 @@ New client projects should be created in the **Outright Google Cloud Console**, 
 
 ```bash
 gcloud auth login  # log in as tim@weareoutright.com
-gcloud projects create analytics-mcp-project --name="Analytics MCP"
-gcloud config set project analytics-mcp-project
+gcloud projects create analytics-mcp-{{CLIENT_SLUG}} --name="Analytics MCP - {{CLIENT_SHORT_NAME}}"
+gcloud config set project analytics-mcp-{{CLIENT_SLUG}}
 gcloud services enable analyticsdata.googleapis.com analyticsadmin.googleapis.com
 # Add dev@weareoutright.com as a viewer so it can authenticate locally
-gcloud projects add-iam-policy-binding analytics-mcp-project \
-  --member="user:dev@weareoutright.com" \
+gcloud projects add-iam-policy-binding analytics-mcp-{{CLIENT_SLUG}} \
+  --member="group:dev@weareoutright.com" \
   --role="roles/viewer"
 ```
 
+> **GCP limits:** project ID max 30 chars (lowercase, hyphens only); `--name` display name max 30 chars. Keep `{{CLIENT_SHORT_NAME}}` short enough that the full `--name` value stays under 30 characters (`"Analytics MCP - "` is already 17 chars, leaving 13 for the client name).
+>
 > To reuse an existing GCP project, skip `projects create` and just run `gcloud config set project YOUR_PROJECT_ID`.
 
 ### 3. Authenticate
 
 ```bash
-gcloud auth application-default login \
-  --scopes=https://www.googleapis.com/auth/analytics.readonly,https://www.googleapis.com/auth/cloud-platform
+gcloud config set account tim@weareoutright.com
+gcloud auth application-default login --scopes=https://www.googleapis.com/auth/analytics.readonly,https://www.googleapis.com/auth/cloud-platform
+gcloud auth application-default set-quota-project analytics-mcp-{{CLIENT_SLUG}}
 ```
 
-A browser window will open — log in with the Google account that has access to the GA4 property.
+A browser window will open — log in as `tim@weareoutright.com`. The `set-quota-project` command must run after ADC tokens exist. Note: keep `--scopes` on one line; backslash continuations can silently break in zsh.
+
+> **If you see "This app is blocked":** The weareoutright.com Google Workspace org restricts OAuth app access. A Workspace admin needs to mark the gcloud SDK as a trusted app: Google Admin Console → Security → Access and data control → API controls → App Access Control → add client ID `764086051850-6qr4p6gpi6hn506pt8ejuq83di341hur` as trusted.
 
 ### 4. Register the MCP with Claude Code
 

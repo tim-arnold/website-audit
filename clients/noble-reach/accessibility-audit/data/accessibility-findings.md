@@ -123,7 +123,7 @@
 - **WCAG:** 1.1.1 Non-text Content (A)
 - **Severity:** Minor
 - **Location:** `_html/templates/partials/logo1.twig:2`; `_html/templates/partials/footer1.twig:4`
-- **Description:** `logo1.twig` provides `aria-label="Noble Reach"` on the link wrapping the logo image. This is an acceptable pattern. However the Playwright tree shows the footer logo as `link "NobleReach Foundation"` — verify the alt text on the actual rendered `<img>` matches the aria-label.
+- **Description:** `logo1.twig` provides `aria-label="NobleReach"` on the link wrapping the logo image. This is an acceptable pattern. However the Playwright tree shows the footer logo as `link "NobleReach Foundation"` — verify the alt text on the actual rendered `<img>` matches the aria-label.
 - **Fix:** Confirm logo `<img>` has `alt="NobleReach Foundation"` (or similar) so multiple redundant accessible names don't conflict.
 
 ---

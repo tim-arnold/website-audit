@@ -16,9 +16,9 @@ Remediation audit for **https://weareoutright.com**. The goal is to identify and
 ## Audit Status
 
 - SEO audit: complete
-- Technology audit: planned
+- Technology audit: complete
 - Accessibility audit: planned
-- Analytics audit: planned
+- Analytics audit: in progress
 - Security audit: planned
 
 ## Tools Available
@@ -38,3 +38,4 @@ GA4 property ID and other non-public credentials are stored in `.env.local` in t
 - Within each audit: raw/structured data goes in `<audit>/data/`, final reports go in `<audit>/reports/`
 - Use markdown tables for all data presentation
 - Reports should be factual and actionable — the audience is a dev team doing a site rebuild
+- **Report H1 titles must start with the report name, not the client name.** The web app sidebar strips everything after the em dash, so `# Technology Audit Report — Outright` is correct; `# Outright — Technology Audit Report` is not.

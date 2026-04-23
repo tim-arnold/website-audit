@@ -1,7 +1,7 @@
 # Report 1: Technical Baseline — noblereach.org
 
 **Audit date:** 2026-03-19
-**Platform:** WordPress on Cloudflare
+**Platform:** WordPress on WPEngine, behind Cloudflare CDN
 **Audience:** Dev team performing site rebuild
 
 ---
@@ -171,7 +171,8 @@ Not directly tested via mobile Lighthouse in this audit. However:
 
 ## 7. Security & Infrastructure
 
-- **CDN/WAF:** Cloudflare (confirmed via server header on all pages)
+- **Host:** WPEngine (origin server)
+- **CDN/WAF:** Cloudflare (confirmed via server header on all pages; sits in front of WPEngine)
 - **HTTPS:** Enforced on all pages ✓
 - **HTTP → HTTPS redirect:** Active (8 backlinks still arriving at `http://noblereach.org/`) ✓
 - **Canonical tags:** Present and correct on all audited pages ✓

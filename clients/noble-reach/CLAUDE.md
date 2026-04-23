@@ -1,4 +1,4 @@
-# Noble Reach Foundation — Pre-Redesign Audit
+# NobleReach Foundation — Pre-Redesign Audit
 
 ## Project
 
@@ -6,7 +6,7 @@ Pre-redesign audit for **https://noblereach.org**. The goal is to document every
 
 ## Client
 
-- **Name:** Noble Reach Foundation
+- **Name:** NobleReach Foundation
 - **Public URL:** https://noblereach.org
 - **Previous domain:** noblereachfoundation.org (redirects are load-bearing — 113 .edu backlinks depend on them)
 - **CMS:** WordPress
@@ -40,5 +40,8 @@ Pre-redesign audit for **https://noblereach.org**. The goal is to document every
 
 - Each audit type lives in its own subdirectory: `seo-audit/`, `wordpress-audit/`, `accessibility-audit/`
 - Within each audit: raw/structured data goes in `<audit>/data/`, final reports go in `<audit>/reports/`
+- Analytics audit: **complete** — data and reports in `analytics-audit/`
+- Security audit: **complete** — data and reports in `security-audit/`
 - Use markdown tables for all data presentation
 - Reports should be factual and actionable — the audience is a dev team doing a site rebuild
+- **Report H1 titles must start with the report name, not the client name.** The web app sidebar strips everything after the em dash, so `# Technology Audit Report — NobleReach Foundation` is correct; `# NobleReach Foundation — Technology Audit Report` is not.

@@ -57,8 +57,16 @@ function linkCrossReferences(html: string): string {
   return html;
 }
 
+// Generate GitHub-style slug IDs on headings so anchor links work
+const renderer = new marked.Renderer();
+renderer.heading = function ({ text, depth }: { text: string; depth: number }) {
+  const raw = text.replace(/<[^>]*>/g, '');
+  const slug = raw.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+  return `<h${depth} id="${slug}">${text}</h${depth}>`;
+};
+
 // Parse markdown to HTML, wrap tables, and resolve cross-references
-const rawHtml = await marked(report.content);
+const rawHtml = await marked(report.content, { renderer });
 const html = linkCrossReferences(
   rawHtml
     .replace(/<table>/g, '<div class="table-wrap"><table>')

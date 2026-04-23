@@ -1,4 +1,4 @@
-# Accessibility Audit Handoff — Noble Reach
+# Accessibility Audit Handoff — NobleReach
 
 ## Context
 
@@ -95,7 +95,7 @@ If any page is inaccessible or errors out, note it and move on.
 
 ## Deliverables
 
-Save to `/Users/timarnold/Documents/Outright/Noble Reach/Eval/accessibility-audit/`:
+Save to `/Users/timarnold/Documents/Outright/NobleReach/Eval/accessibility-audit/`:
 
 ### Data File: `data/accessibility-findings.md`
 

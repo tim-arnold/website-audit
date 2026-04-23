@@ -1,4 +1,4 @@
-# Noble Reach SEO Baseline Data — Collected 2026-03-19
+# NobleReach SEO Baseline Data — Collected 2026-03-19
 
 Target: **noblereach.org**
 

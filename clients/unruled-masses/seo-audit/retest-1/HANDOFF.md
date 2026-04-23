@@ -78,7 +78,7 @@ Then cover each category:
 - Referring domains: before → after
 - Notable new links acquired
 - Notable lost links (flag if high-authority)
-- Any changes to the previous-domain redirect chain (critical for noble-reach-type clients)
+- Any changes to the previous-domain redirect chain
 
 #### AI/LLM Presence
 - New queries where the site appears

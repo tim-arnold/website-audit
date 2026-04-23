@@ -15,11 +15,11 @@ Remediation audit for **https://unruledmasses.org**. The goal is to identify and
 
 ## Audit Status
 
-- SEO audit: complete · retest-2 in progress (started 2026-04-23)
-- Technology audit: complete · retest-2 in progress (started 2026-04-23)
-- Accessibility audit: complete · retest-2 in progress (started 2026-04-23)
-- Analytics audit: complete · retest-3 in progress (started 2026-04-23)
-- Security audit: complete · retest-2 in progress (started 2026-04-23)
+- SEO audit: complete · retest-1 in progress (started 2026-04-23)
+- Technology audit: complete · retest-1 in progress (started 2026-04-23)
+- Accessibility audit: complete · retest-1 in progress (started 2026-04-23)
+- Analytics audit: complete · retest-2 in progress (started 2026-04-23)
+- Security audit: complete · retest-1 in progress (started 2026-04-23)
 
 ## Tools Available
 
